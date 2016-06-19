@@ -1,0 +1,10 @@
+*.o
+*.\#*#
+*.~
+*~
+*\#*#
+a.out
+.DS_Store
+gmon.out
+assets/
+assets
