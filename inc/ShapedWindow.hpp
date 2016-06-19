@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:06:21 2016 guillaume wilmot
-// Last update Sun Jun 19 16:16:51 2016 guillaume wilmot
+// Last update Sun Jun 19 23:02:21 2016 guillaume wilmot
 //
 
 #ifndef SHAPEDWINDOW_HPP_
@@ -50,6 +50,7 @@ public:
   SDL_Texture		*getBackground() const			{return (_tbg);}
   SDL_Rect		getDimensions() const			{return (_dims);}
   Renderer		&getRenderer()				{return (_renderer);}
+  ZBuffer		&getZBuffer()				{return (*_zbuff);}
 
   void			setName(const std::string &s)		{_name = s;}
   void			setMapHeight(int s)			{_mapHeight = s; biggest();}

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:15:24 2016 guillaume wilmot
-// Last update Sun Jun 19 16:24:40 2016 guillaume wilmot
+// Last update Sun Jun 19 19:51:19 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -291,6 +291,7 @@ void			ShapedWindow::resize(const SDL_Event &ev)
       if (_update)
 	{
 	  _update = false;
+	  _zbuff->center();
 	  destroy();
 	  create();
 	}

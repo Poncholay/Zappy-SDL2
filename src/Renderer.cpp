@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 16:04:05 2016 guillaume wilmot
-// Last update Sun Jun 19 16:19:01 2016 guillaume wilmot
+// Last update Sun Jun 19 22:47:00 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -43,7 +43,7 @@ int		Renderer::renderClear()
   return (!_renderer ? -1 : SDL_RenderClear(_renderer));
 }
 
-int		Renderer::renderCopy(SDL_Texture *t, SDL_Rect f, SDL_Rect to)
+int		Renderer::renderCopy(SDL_Texture *t, SDL_Rect &f, SDL_Rect &to)
 {
   return (!_renderer ? -1 : SDL_RenderCopy(_renderer, t, &f, &to));
 }

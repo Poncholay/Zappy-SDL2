@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 13 16:47:59 2016 guillaume wilmot
-// Last update Sun Jun 19 16:28:59 2016 guillaume wilmot
+// Last update Sun Jun 19 23:10:58 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -52,10 +52,13 @@ void		ZBuffer::add(TextureManager::surface &t, SDL_Rect *in, SDL_Rect *out, int 
   memset(&b, 0, sizeof(b));
   b.layer = layer;
   b.surface = t;
-  b.out.h = t.surface->h;
-  b.out.w = t.surface->w;
-  b.in.h = t.surface->h;
-  b.in.w = t.surface->w;
+  if (t.surface)
+    {
+      b.out.h = t.surface->h;
+      b.out.w = t.surface->w;
+      b.in.h = t.surface->h;
+      b.in.w = t.surface->w;
+    }
   if (in)
     b.in = *in;
   if (out)

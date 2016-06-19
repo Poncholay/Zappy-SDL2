@@ -5,13 +5,14 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 17:32:15 2016 guillaume wilmot
-// Last update Sun Jun 19 12:53:33 2016 guillaume wilmot
+// Last update Sun Jun 19 23:04:47 2016 guillaume wilmot
 //
 
 #ifndef CHARSET_HH_
 # define CHARSET_HH_
 
 # include <string>
+# include "ZBuffer.hpp"
 # include "SDL.h"
 
 enum		Direction
@@ -31,11 +32,11 @@ enum		Anim
 
 class		Charset {
 public:
-  Charset(SDL_Renderer *, const std::string &);
+  Charset(const std::string &);
   ~Charset();
 
-  int			load(int, int);
-  void			render();
+  int			load(int, int, Renderer &);
+  void			render(ZBuffer &);
   void			done();
 
   Direction		getDirection() const;
@@ -58,7 +59,6 @@ private:
 
   SDL_Surface   *_charset;
   SDL_Texture   *_texture;
-  SDL_Renderer	*_renderer;
   std::string   _name;
   Direction	_dir;
   Anim		_anim;

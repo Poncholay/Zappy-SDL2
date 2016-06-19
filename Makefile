@@ -5,10 +5,12 @@
 ## Login   <noboud_n@epitech.net>
 ##
 ## Started on  Tue Apr 12 14:58:00 2016 Nyrandone Noboud-Inpeng
-## Last update Sun Jun 19 16:08:43 2016 guillaume wilmot
+## Last update Sun Jun 19 23:08:12 2016 guillaume wilmot
 ##
 
 SRC	= Charset.cpp		\
+	  Displayer.cpp		\
+	  FpsManager.cpp	\
 	  Main.cpp		\
 	  Map.cpp		\
 	  Renderer.cpp		\
@@ -21,7 +23,7 @@ OBJ	= $(addprefix $(OBJDIR), $(SRC:.cpp=.o))
 
 RM	= rm -f
 
-CXX	= g++ -O3 -Wl,-rpath,./lib -std=c++11
+CXX	= g++ -O3 -Wl,-rpath,./lib -std=c++11 -g
 
 NAME	= zappy-gfx
 GUI	= gui
@@ -31,7 +33,7 @@ SRCDIR	= src/
 INCDIR	= -I inc/ -I ./inc/SDL
 
 MAKEOBJ	= obj
- 
+
 LDFLAGS 	+= -lSDL2 -lSDL2_gfx -lSDL2_image -lpng16 -ljpeg -L ./lib
 CXXFLAGS	+= -W -Wall -Wextra -Werror
 
