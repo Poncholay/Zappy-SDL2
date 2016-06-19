@@ -5,12 +5,12 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Sat Jun 18 00:35:00 2016 guillaume wilmot
+// Last update Sun Jun 19 16:30:34 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include "SDL2_rotozoom.h"
-#include "SDL2/SDL_image.h"
+#include "SDL_image.h"
 #include "TextureManager.hpp"
 
 TextureManager::~TextureManager() {destroy();}
@@ -85,7 +85,8 @@ int		TextureManager::add(const std::string &key, SDL_Surface *s)
   surface	su;
 
   su.surface = s;
-  su.texture = SDL_CreateTextureFromSurface(_r, s);
+  if (_r)
+    su.texture = SDL_CreateTextureFromSurface(_r->get(), s);
   _map[key].push_back(su);
   return (0);
 }
@@ -94,7 +95,7 @@ int		TextureManager::update()
 {
   for (auto it = _map.begin(); it != _map.end(); it++)
     for (unsigned int i = 0; i < (*it).second.size(); i++)
-      if (!((*it).second[i].texture = SDL_CreateTextureFromSurface(_r, (*it).second[i].surface)))
+      if (!_r || !((*it).second[i].texture = SDL_CreateTextureFromSurface(_r->get(), (*it).second[i].surface)))
 	return (-1);
   return (0);
 }

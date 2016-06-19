@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:06:21 2016 guillaume wilmot
-// Last update Sun Jun 19 12:55:11 2016 guillaume wilmot
+// Last update Sun Jun 19 16:16:51 2016 guillaume wilmot
 //
 
 #ifndef SHAPEDWINDOW_HPP_
@@ -13,6 +13,7 @@
 
 # include "SDL.h"
 # include "SDL_shape.h"
+# include "Renderer.hpp"
 # include "TextureManager.hpp"
 # include "ZBuffer.hpp"
 
@@ -38,10 +39,6 @@ public:
   void			moveCamera(const SDL_Event &ev);
   void			resize(const SDL_Event &ev);
 
-  int			setRenderDrawColor(Uint8 = 0, Uint8 = 0, Uint8 = 0, Uint8 = 255);
-  int			renderClear();
-  int			renderCopy(SDL_Texture *, SDL_Rect, SDL_Rect);
-  void			renderPresent();
   SDL_Texture		*createTexture();
   SDL_Surface		*createBackground();
   void			createForeground();
@@ -50,9 +47,9 @@ public:
   int			getHeight() const			{return (_dims.h);}
   int			getWidth() const			{return (_dims.w);}
   SDL_Surface		*getScreen() const			{return (_screen);}
-  SDL_Renderer		*getRenderer() const			{return (_renderer);}
   SDL_Texture		*getBackground() const			{return (_tbg);}
   SDL_Rect		getDimensions() const			{return (_dims);}
+  Renderer		&getRenderer()				{return (_renderer);}
 
   void			setName(const std::string &s)		{_name = s;}
   void			setMapHeight(int s)			{_mapHeight = s; biggest();}
@@ -69,7 +66,7 @@ private:
   void			destroy();
 
   SDL_Window		*_window;
-  SDL_Renderer		*_renderer;
+  Renderer		_renderer;
   SDL_Surface		*_background;
   SDL_Texture		*_tbg;
   SDL_Surface		*_surface;

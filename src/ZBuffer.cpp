@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 13 16:47:59 2016 guillaume wilmot
-// Last update Fri Jun 17 23:59:20 2016 guillaume wilmot
+// Last update Sun Jun 19 16:28:59 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -81,7 +81,7 @@ void		ZBuffer::render()
   std::sort(_buffer.begin(), _buffer.end(), ZBuffer::sort);
   for (unsigned int i = 0; i < _buffer.size(); i++)
     if (_buffer[i].surface.texture)
-      SDL_RenderCopy(_renderer, _buffer[i].surface.texture, &_buffer[i].in, &_buffer[i].out);
+      SDL_RenderCopy(_renderer->get(), _buffer[i].surface.texture, &_buffer[i].in, &_buffer[i].out);
   _buffer.clear();
 }
 

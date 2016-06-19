@@ -5,7 +5,7 @@
 // Login   <empoci_k@epitech.net>
 //
 // Started on  Wed Apr 27 15:21:29 2016 Kévin Empociello
-// Last update Tue Jun  7 16:03:10 2016 guillaume wilmot
+// Last update Sun Jun 19 15:10:17 2016 guillaume wilmot
 //
 
 #ifndef ZCLIENT_H
@@ -36,6 +36,7 @@ private:
   int			_y;
   int			_port;
   const char	       	*_host;
+
 public:
   void			writeServer(const char *);
   void			launch();

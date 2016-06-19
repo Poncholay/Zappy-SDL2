@@ -5,12 +5,13 @@
 ## Login   <noboud_n@epitech.net>
 ##
 ## Started on  Tue Apr 12 14:58:00 2016 Nyrandone Noboud-Inpeng
-## Last update Sat Jun 18 12:34:22 2016 guillaume wilmot
+## Last update Sun Jun 19 16:08:43 2016 guillaume wilmot
 ##
 
 SRC	= Charset.cpp		\
 	  Main.cpp		\
 	  Map.cpp		\
+	  Renderer.cpp		\
 	  ShapedWindow.cpp	\
 	  TextureManager.cpp	\
 	  ZBuffer.cpp		\
@@ -20,7 +21,7 @@ OBJ	= $(addprefix $(OBJDIR), $(SRC:.cpp=.o))
 
 RM	= rm -f
 
-CXX	= g++ -Wl,-rpath,./lib -std=c++11
+CXX	= g++ -O3 -Wl,-rpath,./lib -std=c++11
 
 NAME	= zappy-gfx
 GUI	= gui
@@ -30,8 +31,8 @@ SRCDIR	= src/
 INCDIR	= -I inc/ -I ./inc/SDL
 
 MAKEOBJ	= obj
-
-LDFLAGS 	+= -lSDL2 -lSDL2_gfx -lSDL2_image -L ./lib
+ 
+LDFLAGS 	+= -lSDL2 -lSDL2_gfx -lSDL2_image -lpng16 -ljpeg -L ./lib
 CXXFLAGS	+= -W -Wall -Wextra -Werror
 
 all:

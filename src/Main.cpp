@@ -5,7 +5,7 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Sun Jun 19 13:37:22 2016 guillaume wilmot
+// Last update Sun Jun 19 16:26:35 2016 guillaume wilmot
 */
 
 #include <iostream>
@@ -45,7 +45,7 @@ int		main(int argc, char **argv)
   w.setZbuff(&zbuff);
   if (w.create() == -1)
     return (-1);
-  w.setRenderDrawColor(0, 0, 0xFF, 0xFF);
+  w.getRenderer().setRenderDrawColor(0, 0, 0xFF, 0xFF);
 
   // Charset		C("assets/textures/charsets/test.bmp");
   // C.setRenderer(w.getRenderer());
@@ -71,11 +71,11 @@ int		main(int argc, char **argv)
         }
 
       SDL_Rect          dims = w.getDimensions();
-      w.renderClear();
-      w.renderCopy(w.getBackground(), dims, dims);
+      w.getRenderer().renderClear();
+      w.getRenderer().renderCopy(w.getBackground(), dims, dims);
       w.createForeground();
       // C.render(screen);
-      w.renderPresent();
+      w.getRenderer().renderPresent();
 
       clock_t		endFrame = clock();
       deltaTime += endFrame - beginFrame;

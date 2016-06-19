@@ -5,18 +5,16 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:15:24 2016 guillaume wilmot
-// Last update Sun Jun 19 12:56:08 2016 guillaume wilmot
+// Last update Sun Jun 19 16:24:40 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include "ShapedWindow.hpp"
 #include "SDL2_rotozoom.h"
-#include "SDL2/SDL_image.h"
 
 ShapedWindow::ShapedWindow(const std::string &name, int w, int h)
 {
   _window = NULL;
-  _renderer = NULL;
   _screen = NULL;
   _tbg = NULL;
   _tmgr = NULL;
@@ -41,8 +39,6 @@ void			ShapedWindow::destroy()
 {
   if (_tbg)
     SDL_DestroyTexture(_tbg);
-  if (_renderer)
-    SDL_DestroyRenderer(_renderer);
   if (_window)
     SDL_DestroyWindow(_window);
 }
@@ -59,12 +55,13 @@ int			ShapedWindow::create()
     return (-1);
   if (!(_window = SDL_CreateShapedWindow("Zappy", _windowPos.x, _windowPos.y, WINX, WINY, 0)))
     return (std::cerr << "Could not create window." << std::endl, -1);
-  if (!(_renderer = SDL_CreateRenderer(_window, -1, 0)))
-    return (std::cerr << "Could not create renderer." << std::endl, -1);
-  _tmgr->setRenderer(_renderer);
+
+  if (_renderer.init(_window) == -1)
+    return (-1);
+  _tmgr->setRenderer(&_renderer);
+  _zbuff->setRenderer(&_renderer);
   if (_tmgr->update() == -1)
     return (-1);
-  _zbuff->setRenderer(_renderer);
 
   SDL_SetWindowPosition(_window, _windowPos.x, _windowPos.y);
   if (!(createShape()))
@@ -92,7 +89,7 @@ SDL_Texture		*ShapedWindow::createTexture()
 {
   if (_tbg)
     SDL_DestroyTexture(_tbg);
-  if (!(_tbg = SDL_CreateTextureFromSurface(_renderer, _background)))
+  if (!(_tbg = SDL_CreateTextureFromSurface(_renderer.get(), _background)))
     {
       std::cerr << "Could not create texture." << std::endl;
       return (NULL);
@@ -303,24 +300,4 @@ void			ShapedWindow::resize(const SDL_Event &ev)
 void			ShapedWindow::biggest()
 {
   _mapBiggest = _mapHeight > _mapWidth ? _mapHeight : _mapWidth;
-}
-
-int			ShapedWindow::setRenderDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
-{
-  return (SDL_SetRenderDrawColor(_renderer, r, g, b, a));
-}
-
-int			ShapedWindow::renderClear()
-{
-  return (SDL_RenderClear(_renderer));
-}
-
-int			ShapedWindow::renderCopy(SDL_Texture *t, SDL_Rect f, SDL_Rect to)
-{
-  return (SDL_RenderCopy(_renderer, t, &f, &to));
-}
-
-void			ShapedWindow::renderPresent()
-{
-  SDL_RenderPresent(_renderer);
 }
