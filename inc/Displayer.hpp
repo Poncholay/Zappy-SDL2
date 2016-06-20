@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:23:17 2016 guillaume wilmot
-// Last update Sun Jun 19 20:01:17 2016 guillaume wilmot
+// Last update Mon Jun 20 11:10:31 2016 guillaume wilmot
 //
 
 #ifndef DISPLAYER_HPP_
@@ -33,6 +33,7 @@ private:
   ShapedWindow		_win;
   ZBuffer		_zbuff;
   TextureManager	_tmgr;
+  TextureManager	_tmgrChar;
   //Map		_map;
 };
 

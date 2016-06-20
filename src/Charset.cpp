@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Sun Jun 19 23:43:32 2016 guillaume wilmot
+// Last update Mon Jun 20 11:55:10 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -32,7 +32,15 @@ Charset::Charset(const std::string &name)
   _loaded = false;
 }
 
-Charset::~Charset() {if (_loaded) SDL_FreeSurface(_charset);}
+Charset::Charset(const Charset &) {}
+
+Charset::~Charset()
+{
+  if (_loaded) SDL_FreeSurface(_charset);
+  if (_loaded) SDL_DestroyTexture(_texture);
+}
+
+Charset		&Charset::operator=(const Charset &) {return (*this);}
 
 int		Charset::load(int nbx, int nby, Renderer &renderer)
 {

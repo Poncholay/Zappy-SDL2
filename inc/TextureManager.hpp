@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 18:53:10 2016 guillaume wilmot
-// Last update Sun Jun 19 16:27:47 2016 guillaume wilmot
+// Last update Mon Jun 20 11:18:16 2016 guillaume wilmot
 //
 
 #ifndef TEXTUREMANAGER_HPP_
@@ -44,7 +44,6 @@ private:
   TextureManager	&operator=(const TextureManager &)	{return (*this);}
 
   std::map<std::string, std::vector<surface> >		_map;
-  std::vector<surface *>				_free;
   int							_scale;
   Renderer						*_r;
 };

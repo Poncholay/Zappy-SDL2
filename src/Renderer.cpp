@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 16:04:05 2016 guillaume wilmot
-// Last update Sun Jun 19 22:47:00 2016 guillaume wilmot
+// Last update Mon Jun 20 11:40:02 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -28,6 +28,7 @@ Renderer::~Renderer()
 
 int		Renderer::init(SDL_Window *w)
 {
+  std::cout << "create renderer" << std::endl;
   if (!w || !(_renderer = SDL_CreateRenderer(w, -1, 0)))
     return (std::cerr << "Could not create renderer." << std::endl, -1);
   return (0);

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Sun Jun 19 16:30:34 2016 guillaume wilmot
+// Last update Mon Jun 20 11:43:21 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -20,10 +20,11 @@ void		TextureManager::destroy()
   for (auto it = _map.begin(); it != _map.end(); it++)
     for (unsigned int i = 0; i < (*it).second.size(); i++)
       {
-	SDL_FreeSurface((*it).second[i].surface);
-	SDL_DestroyTexture((*it).second[i].texture);
+	if ((*it).second[i].surface)
+	  SDL_FreeSurface((*it).second[i].surface);
+	if ((*it).second[i].texture)
+	  SDL_DestroyTexture((*it).second[i].texture);
       }
-  _free.clear();
   _map.clear();
 }
 
@@ -84,6 +85,7 @@ int		TextureManager::add(const std::string &key, SDL_Surface *s)
 {
   surface	su;
 
+  memset(&su, 0, sizeof(su));
   su.surface = s;
   if (_r)
     su.texture = SDL_CreateTextureFromSurface(_r->get(), s);

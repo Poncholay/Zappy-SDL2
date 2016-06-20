@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:15:24 2016 guillaume wilmot
-// Last update Sun Jun 19 19:51:19 2016 guillaume wilmot
+// Last update Mon Jun 20 12:11:34 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -19,6 +19,7 @@ ShapedWindow::ShapedWindow(const std::string &name, int w, int h)
   _tbg = NULL;
   _tmgr = NULL;
   _zbuff = NULL;
+  _background = NULL;
   _name = name;
   _dragging = false;
   _smoother = 0;
@@ -53,13 +54,15 @@ int			ShapedWindow::create()
 
   if (_tmgr->init(_scale) == -1)
     return (-1);
-  if (!(_window = SDL_CreateShapedWindow("Zappy", _windowPos.x, _windowPos.y, WINX, WINY, 0)))
-    return (std::cerr << "Could not create window." << std::endl, -1);
-
-  if (_renderer.init(_window) == -1)
-    return (-1);
-  _tmgr->setRenderer(&_renderer);
-  _zbuff->setRenderer(&_renderer);
+  if (!_window)
+    {
+      if (!(_window = SDL_CreateShapedWindow("Zappy", _windowPos.x, _windowPos.y, WINX, WINY, 0)))
+	return (std::cerr << "Could not create window." << std::endl, -1);
+      if (_renderer.init(_window) == -1)
+	return (-1);
+      _tmgr->setRenderer(&_renderer);
+      _zbuff->setRenderer(&_renderer);
+    }
   if (_tmgr->update() == -1)
     return (-1);
 
@@ -292,7 +295,7 @@ void			ShapedWindow::resize(const SDL_Event &ev)
 	{
 	  _update = false;
 	  _zbuff->center();
-	  destroy();
+	  // destroy();
 	  create();
 	}
     }
