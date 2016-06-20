@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 18:53:10 2016 guillaume wilmot
-// Last update Mon Jun 20 17:47:43 2016 guillaume wilmot
+// Last update Mon Jun 20 21:19:38 2016 guillaume wilmot
 //
 
 #ifndef TEXTUREMANAGER_HPP_
@@ -15,7 +15,7 @@
 # include <vector>
 # include "Renderer.hpp"
 # include "ScopedPtr.hpp"
-# include "CharsetManager.hpp"
+# include "CharacterManager.hpp"
 # include "SDL.h"
 
 class		CharsetManager;
@@ -49,7 +49,7 @@ private:
   std::map<std::string, std::vector<surface> >			_map;
   int								_scale;
   Renderer							*_r;
-  CharsetManager						_cmgr;
+  CharacterManager						_cmgr;
 };
 
 #endif /* !TEXTUREMANAGER_HPP_ */
