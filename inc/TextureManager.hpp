@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 18:53:10 2016 guillaume wilmot
-// Last update Mon Jun 20 11:18:16 2016 guillaume wilmot
+// Last update Mon Jun 20 15:39:57 2016 guillaume wilmot
 //
 
 #ifndef TEXTUREMANAGER_HPP_
@@ -15,6 +15,7 @@
 # include <vector>
 # include "Renderer.hpp"
 # include "ScopedPtr.hpp"
+# include "CharsetManager.hpp"
 # include "SDL.h"
 
 class		TextureManager {
@@ -27,9 +28,9 @@ public:
     SDL_Texture		*texture;
   }			surface;
 
+  int			init(int);
   void			setRenderer(Renderer *r)		{_r = r;}
   void			destroy();
-  int			init(int);
   int			add(const std::string &, const std::string &, float = 0, float = 0, int = 0);
   int			add(const std::string &, SDL_Surface *);
   int			update();
@@ -46,6 +47,7 @@ private:
   std::map<std::string, std::vector<surface> >		_map;
   int							_scale;
   Renderer						*_r;
+  CharsetManager					_cmgr;
 };
 
 #endif /* !TEXTUREMANAGER_HPP_ */

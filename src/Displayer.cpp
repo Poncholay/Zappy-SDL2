@@ -5,14 +5,14 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Sun Jun 19 23:43:56 2016 guillaume wilmot
+// Last update Mon Jun 20 16:22:44 2016 guillaume wilmot
 //
 
 #include "FpsManager.hpp"
 #include "Displayer.hpp"
 #include "Charset.hh"
 
-Displayer::Displayer() : _win("Zappy"), _zbuff(WINX, WINY) {}
+Displayer::Displayer() : _win("Zappy", 15, 15), _zbuff(WINX, WINY) {}
 
 void			Displayer::create()
 {
@@ -37,7 +37,7 @@ int			Displayer::start()
   _win.setZbuff(&_zbuff);
   if (_win.create() == -1)
     return (-1);
-  _win.getRenderer().setRenderDrawColor(0, 0, 0xFF, 0xFF);
+  _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
 
   Charset            C("assets/textures/charsets/lvl1/moving/image.png");
   if (C.load(15, 4, _win.getRenderer()) == -1)

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Mon Jun 20 11:55:10 2016 guillaume wilmot
+// Last update Mon Jun 20 12:32:57 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -26,7 +26,7 @@ Charset::Charset(const std::string &name)
   _dir = UP;
   _anim = STAND;
   _frame = 0;
-  _speed = 15;
+  _speed = 0;
   _timer = 0;
   _status = true;
   _loaded = false;

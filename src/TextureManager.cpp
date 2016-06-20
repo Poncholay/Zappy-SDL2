@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Mon Jun 20 11:43:21 2016 guillaume wilmot
+// Last update Mon Jun 20 15:39:25 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -47,6 +47,7 @@ int		TextureManager::init(int scale)
   for (unsigned int i = 2; i < 5; i++)
     if (-1 == add("vine", "./assets/textures/vine" + std::to_string(i) + ".png", scale, scale, 2))
       return (-1);
+  _cmgr.init(scale);
   return (0);
 }
 

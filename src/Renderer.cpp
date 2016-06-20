@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 16:04:05 2016 guillaume wilmot
-// Last update Mon Jun 20 11:40:02 2016 guillaume wilmot
+// Last update Mon Jun 20 12:32:09 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -13,23 +13,18 @@
 
 Renderer::Renderer(SDL_Window *w)
 {
-  if (!w || !(_renderer = SDL_CreateRenderer(w, -1, 0)))
+  if (!w || !(_renderer = SDL_CreateRenderer(w, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)))
     {
       std::cerr << "Could not create renderer." << std::endl;
       throw std::bad_alloc();
     }
 }
 
-Renderer::~Renderer()
-{
-  if (_renderer)
-    SDL_DestroyRenderer(_renderer);
-}
+Renderer::~Renderer() {if (_renderer) SDL_DestroyRenderer(_renderer);}
 
 int		Renderer::init(SDL_Window *w)
 {
-  std::cout << "create renderer" << std::endl;
-  if (!w || !(_renderer = SDL_CreateRenderer(w, -1, 0)))
+  if (!w || !(_renderer = SDL_CreateRenderer(w, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)))
     return (std::cerr << "Could not create renderer." << std::endl, -1);
   return (0);
 }

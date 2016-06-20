@@ -5,10 +5,11 @@
 ## Login   <noboud_n@epitech.net>
 ##
 ## Started on  Tue Apr 12 14:58:00 2016 Nyrandone Noboud-Inpeng
-## Last update Sun Jun 19 23:08:12 2016 guillaume wilmot
+## Last update Mon Jun 20 15:34:25 2016 guillaume wilmot
 ##
 
 SRC	= Charset.cpp		\
+	  CharsetManager.cpp	\
 	  Displayer.cpp		\
 	  FpsManager.cpp	\
 	  Main.cpp		\

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:15:24 2016 guillaume wilmot
-// Last update Mon Jun 20 12:11:34 2016 guillaume wilmot
+// Last update Mon Jun 20 16:39:38 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -149,29 +149,43 @@ SDL_Surface		*ShapedWindow::createShape()
 SDL_Surface		*ShapedWindow::createBackground()
 {
   const std::vector<TextureManager::surface>	&cube = _tmgr->getV("cube");
+  const std::vector<TextureManager::surface>	&vine = _tmgr->getV("vine");
+  TextureManager::surface		tmp2;
   TextureManager::surface		tmp;
   SDL_Rect				pos;
 
   srand(_seed);
-  tmp = cube[rand() % cube.size()];
-  for (int i = 0; i < _mapHeight; i++)
-    for (int j = 0; j < _mapWidth; j++)
-      {
-	if (!tmp.surface)
-	  continue;
-	pos.w = tmp.surface->w;
-	pos.h = tmp.surface->h;
-	pos.x = (i + j) * 1.0 * pos.w / 2;
-	pos.y = (_mapWidth - (j + 1) + i) * 1.0 * pos.h / 4;
-	_zbuff->add(tmp, NULL, &pos);
-      }
+  if ((tmp = cube[rand() % cube.size()]).surface)
+    for (int i = 0; i < _mapHeight; i++)
+      for (int j = 0; j < _mapWidth; j++)
+	{
+	  pos.w = tmp.surface->w;
+	  pos.h = tmp.surface->h;
+	  pos.x = (i + j) * 1.0 * pos.w / 2;
+	  pos.y = (_mapWidth - (j + 1) + i) * 1.0 * pos.h / 4;
+	  _zbuff->add(tmp, NULL, &pos);
+	  if (i == _mapHeight - 1 || j == 0 ? 1 : 0)
+	    {
+	      if (rand() % 5 == 0)
+		{
+		  tmp2 = vine[rand() % vine.size()];
+		  pos.w = tmp2.surface->w;
+		  pos.h = tmp2.surface->h;
+		  pos.x = (i + j) * 1.0 * tmp.surface->w / 2;
+		  pos.y = (_mapWidth - (j + 1) + i) * 1.0 * tmp.surface->h / 4;
+		  pos.y += j == 0 ? 1.0 * tmp.surface->h / 4 : 1.0 * tmp.surface->h / 1.5;
+		  _zbuff->add(tmp2, NULL, &pos, 2);
+		}
+	    }
+	  else if (rand() % 15 == 0) {rand();}
+	  else if (rand() % 8 == 0) {rand();}
+	}
   return (_background = _zbuff->renderToSurface());
 }
 
 void			ShapedWindow::createForeground()
 {
   const std::vector<TextureManager::surface>	&cube = _tmgr->getV("cube");
-  const std::vector<TextureManager::surface>	&vine = _tmgr->getV("vine");
   const std::vector<TextureManager::surface>	&tree = _tmgr->getV("tree");
   const std::vector<TextureManager::surface>	&bush = _tmgr->getV("bush");
   TextureManager::surface		tmp;
@@ -179,42 +193,33 @@ void			ShapedWindow::createForeground()
   SDL_Rect				pos;
 
   srand(_seed);
-  tmp = cube[rand() % cube.size()];
-  for (int i = 0; i < _mapHeight; i++)
-    for (int j = 0; j < _mapWidth; j++)
-      if (i == _mapHeight - 1 || j == 0 ? 1 : 0)
-	{
-	  if (rand() % 5 == 0)
-	    {
-	      tmp2 = vine[rand() % vine.size()];
-	      pos.w = tmp2.surface->w;
-	      pos.h = tmp2.surface->h;
-	      pos.x = (i + j) * 1.0 * tmp.surface->w / 2;
-	      pos.y = (_mapWidth - (j + 1) + i) * 1.0 * tmp.surface->h / 4;
-	      pos.y += j == 0 ? 1.0 * tmp.surface->h / 4 : 1.0 * tmp.surface->h / 1.5;
-	      _zbuff->add(tmp2, NULL, &pos, 2);
-	    }
-	}
-      else if (rand() % 15 == 0)
-	{
-	  tmp2 = tree[rand() % tree.size()];
-	  pos.x = (i + j) * 1.0 * tmp.surface->w / 2;
-	  pos.y = (_mapWidth - (j + 1) + i) * 1.0 * tmp.surface->h / 4;
-	  pos.y -= 1.0 * tmp.surface->h / 2;
-	  pos.w = tmp2.surface->w;
-	  pos.h = tmp2.surface->h;
-	  _zbuff->add(tmp2, NULL, &pos, 2);
-	}
-      else if (rand() % 8 == 0)
-	{
-	  tmp2 = bush[rand() % bush.size()];
-	  pos.x = (i + j) * 1.0 * tmp.surface->w / 2;
-	  pos.y = (_mapWidth - (j + 1) + i) * 1.0 * tmp.surface->h / 4;
-	  pos.y -= 1.0 * tmp.surface->h / 2;
-	  pos.w = tmp2.surface->w;
-	  pos.h = tmp2.surface->h;
-	  _zbuff->add(tmp2, NULL, &pos, 2);
-	}
+  if ((tmp = cube[rand() % cube.size()]).surface)
+    for (int i = 0; i < _mapHeight; i++)
+      for (int j = 0; j < _mapWidth; j++)
+	if (i == _mapHeight - 1 || j == 0 ? 1 : 0)
+	  {
+	    if (rand() % 5 == 0) {rand();}
+	  }
+	else if (rand() % 15 == 0)
+	  {
+	    tmp2 = tree[rand() % tree.size()];
+	    pos.x = (i + j) * 1.0 * tmp.surface->w / 2;
+	    pos.y = (_mapWidth - (j + 1) + i) * 1.0 * tmp.surface->h / 4;
+	    pos.y -= 1.0 * tmp.surface->h / 2;
+	    pos.w = tmp2.surface->w;
+	    pos.h = tmp2.surface->h;
+	    _zbuff->add(tmp2, NULL, &pos, 2);
+	  }
+	else if (rand() % 8 == 0)
+	  {
+	    tmp2 = bush[rand() % bush.size()];
+	    pos.x = (i + j) * 1.0 * tmp.surface->w / 2;
+	    pos.y = (_mapWidth - (j + 1) + i) * 1.0 * tmp.surface->h / 4;
+	    pos.y -= 1.0 * tmp.surface->h / 2;
+	    pos.w = tmp2.surface->w;
+	    pos.h = tmp2.surface->h;
+	    _zbuff->add(tmp2, NULL, &pos, 2);
+	  }
   _zbuff->render();
 }
 
