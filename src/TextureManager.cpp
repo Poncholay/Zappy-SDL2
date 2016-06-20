@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Mon Jun 20 15:39:25 2016 guillaume wilmot
+// Last update Mon Jun 20 17:48:59 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -47,11 +47,10 @@ int		TextureManager::init(int scale)
   for (unsigned int i = 2; i < 5; i++)
     if (-1 == add("vine", "./assets/textures/vine" + std::to_string(i) + ".png", scale, scale, 2))
       return (-1);
-  _cmgr.init(scale);
   return (0);
 }
 
-SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale) const
+SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale)
 {
   SDL_Surface	*ret;
   float		x2;
@@ -100,6 +99,7 @@ int		TextureManager::update()
     for (unsigned int i = 0; i < (*it).second.size(); i++)
       if (!_r || !((*it).second[i].texture = SDL_CreateTextureFromSurface(_r->get(), (*it).second[i].surface)))
 	return (-1);
+  _cmgr.init(_scale, _r);
   return (0);
 }
 
