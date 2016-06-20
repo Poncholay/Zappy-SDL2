@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Mon Jun 20 17:48:59 2016 guillaume wilmot
+// Last update Tue Jun 21 00:13:12 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -60,6 +60,11 @@ SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale)
   y2 = 1.0 * y / s->h > 1 ? 1 : 1.0 * y / s->h;
   if (scale == 2)
     x2 = 1.0 * y2 * (1.0 * s->w / s->h);
+  if (scale == 3)
+    {
+      y2 = 1.0 * y / s->h > 2 ? 2 : 1.0 * y / s->h;
+      x2 = 1.0 * x / s->w > 2 ? 2 : 1.0 * x / s->w;
+    }
   if (!(ret = zoomSurface(s, x2, y2, 0)))
     return (NULL);
   SDL_FreeSurface(s);

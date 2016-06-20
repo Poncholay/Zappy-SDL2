@@ -5,7 +5,7 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Mon Jun 20 17:13:05 2016 guillaume wilmot
+// Last update Mon Jun 20 22:07:53 2016 guillaume wilmot
 */
 
 #include <iostream>
@@ -27,22 +27,13 @@ void		help()
   std::cout << "Enjoy !" << std::endl;
 }
 
-int		check(int argc, char **argv)
+int		main()
 {
-  if (argc < 3)
-    return (std::cerr << "./zappy_gdx width height" << std::endl, -1);
-  if (std::atoi(argv[1]) > 100 || std::atoi(argv[2]) > 100)
-    return (std::cerr << "Map is too big." << std::endl, -1);
+  std::thread	*displayer;
+  // std::thread	*client;
+
   help();
-  return (0);
-}
-
-int		main(int argc, char **argv)
-{
-  if (check(argc, argv) == -1)
-    return (-1);
-
-  std::thread	*d;
-  d = new std::thread(Displayer::create);
-  d->join();
+  // client = new std::thread(ZClient::create);
+  displayer = new std::thread(Displayer::create);
+  displayer->join();
 }

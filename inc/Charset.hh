@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 17:32:15 2016 guillaume wilmot
-// Last update Mon Jun 20 11:54:32 2016 guillaume wilmot
+// Last update Mon Jun 20 22:34:34 2016 guillaume wilmot
 //
 
 #ifndef CHARSET_HH_
@@ -32,11 +32,10 @@ enum		Anim
 
 class		Charset {
 public:
-  Charset(const std::string &);
+  Charset();
   ~Charset();
 
-  int			load(int, int, Renderer &);
-  void			render(ZBuffer &);
+  void			render(ZBuffer &, CharacterManager &);
   void			done();
 
   Direction		getDirection() const;
@@ -57,13 +56,12 @@ private:
   Charset(const Charset &);
   Charset	&operator=(const Charset &);
 
-  SDL_Surface   *_charset;
   SDL_Texture   *_texture;
-  std::string   _name;
+
+  int		_lvl;
   Direction	_dir;
   Anim		_anim;
-  int           _nbx;
-  int           _nby;
+
   int           _w;
   int           _h;
   int		_posX;
@@ -72,7 +70,6 @@ private:
   int		_speed;
   int		_timer;
   bool		_status;
-  bool          _loaded;
 };
 
 #endif /* !CHARSET_HH_ */

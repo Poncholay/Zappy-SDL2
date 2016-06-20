@@ -5,89 +5,62 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Mon Jun 20 12:32:57 2016 guillaume wilmot
+// Last update Tue Jun 21 00:08:16 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include "Charset.hh"
 #include "SDL2/SDL_image.h"
 
-Charset::Charset(const std::string &name)
+Charset::Charset()
 {
-  _charset = NULL;
   _texture = NULL;
-  _name = name;
-  _nbx = 0;
-  _nby = 0;
+  _lvl = 0;
   _w = 0;
   _h = 0;
   _posX = 0;
   _posY = 0;
   _dir = UP;
-  _anim = STAND;
+  _anim = WALK;
   _frame = 0;
   _speed = 0;
   _timer = 0;
   _status = true;
-  _loaded = false;
 }
 
 Charset::Charset(const Charset &) {}
-
-Charset::~Charset()
-{
-  if (_loaded) SDL_FreeSurface(_charset);
-  if (_loaded) SDL_DestroyTexture(_texture);
-}
+Charset::~Charset() {}
 
 Charset		&Charset::operator=(const Charset &) {return (*this);}
 
-int		Charset::load(int nbx, int nby, Renderer &renderer)
-{
-  if (!(_charset = IMG_Load(_name.c_str())))
-    return (std::cerr << "Could not load " << _name << std::endl, -1);
-  if (!(_texture = SDL_CreateTextureFromSurface(renderer.get(), _charset)))
-    return (std::cerr << "Could not create Texture" << std::endl, -1);
-  _nbx = nbx;
-  _nby = nby;
-  _nbx = _nbx;
-  _nby = _nby;
-  _w = _charset->w / _nbx;
-  _h = _charset->h / _nby;
-  _loaded = true;
-  return (0);
-}
-
-void		Charset::render(ZBuffer &zbuff)
+void		Charset::render(ZBuffer &zbuff, CharacterManager &mgr)
 {
   SDL_Rect	src;
   SDL_Rect	pos;
   TextureManager::surface s;
-  static int	i = 0;
 
-  src.x = (_frame % _nbx) * _w;
-  src.y = (static_cast<int>(_dir) % _nby // + static_cast<int>(_anim) % _nby
-	   ) * _h;
+  if (!(_texture = mgr[_lvl][_anim]))
+    return ;
+  SDL_QueryTexture(_texture, NULL, NULL, &_w, &_h);
+  _w /= mgr.getWidth(_lvl, 1 * _anim);
+  _h /= mgr.getHeight(_lvl, 1 * _anim);
+
+  src.x = 1.0 * (_frame % mgr.getWidth(_lvl, 1 * _anim)) * _w;
+  src.y = 1.0 * (static_cast<int>(_dir) % mgr.getHeight(_lvl, 1 * _anim)) * _h;
   src.w = _w;
   src.h = _h;
   pos.x = _posX;
   pos.y = _posY;
   pos.w = _w;
   pos.h = _h;
-
   s.surface = NULL;
   s.texture = _texture;
   zbuff.add(s, &src, &pos);
 
   if (_status && _timer++ == _speed)
     {
-      _frame = (_frame + 1) % _nbx;
+      _frame = (_frame + 1) % mgr.getWidth(_lvl, 1 * _anim);
       _timer = 0;
-      if (i++ == 15)
-	{
-	  setDirection(static_cast<Direction>((getDirection() + 1) % _nby));
-	  i = 0;
-	}
     }
 }
 

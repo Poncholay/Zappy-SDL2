@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Mon Jun 20 16:22:44 2016 guillaume wilmot
+// Last update Tue Jun 21 00:00:40 2016 guillaume wilmot
 //
 
 #include "FpsManager.hpp"
@@ -39,9 +39,7 @@ int			Displayer::start()
     return (-1);
   _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
 
-  Charset            C("assets/textures/charsets/lvl1/moving/image.png");
-  if (C.load(15, 4, _win.getRenderer()) == -1)
-    return (-1);
+  Charset            C;
   C.setPosY(300);
   C.setPosX(300);
 
@@ -63,7 +61,7 @@ int			Displayer::start()
       dims = _win.getDimensions();
       _win.getRenderer().renderClear();
       _win.getRenderer().renderCopy(_win.getBackground(), dims, dims);
-      C.render(_win.getZBuffer());
+      C.render(_win.getZBuffer(), _tmgr.getCmgr());
       _win.createForeground();
       _win.getRenderer().renderPresent();
       fpsMgr.show();

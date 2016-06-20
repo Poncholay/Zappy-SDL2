@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 13:06:52 2016 guillaume wilmot
-// Last update Mon Jun 20 21:18:31 2016 guillaume wilmot
+// Last update Tue Jun 21 00:07:29 2016 guillaume wilmot
 //
 
 #ifndef CHARSETMANAGER_HPP_
@@ -20,21 +20,26 @@
 
 class		CharacterManager {
 public:
-  CharacterManager(int = LVLMAX, int = NBANIM);
+  CharacterManager();
   ~CharacterManager();
 
+  void				destroy();
   void				setRenderer(Renderer *r) {_r = r;}
   int				init(int, Renderer *);
-  std::vector<SDL_Texture *>	&operator[](int i)	 {return (_vector[i]);}
+  int				getHeight(unsigned int, unsigned int) const;
+  int				getWidth(unsigned int, unsigned int) const;
+
+  std::vector<SDL_Texture *>	&operator[](int i)	{return (_vector[i]);}
 
 private:
-  CharacterManager(const CharacterManager &)		 {}
-  CharacterManager&operator=(const CharacterManager &)	 {return (*this);}
+  CharacterManager(const CharacterManager &)		{}
+  CharacterManager&operator=(const CharacterManager &)	{return (*this);}
 
-  std::vector<std::vector<SDL_Texture *> >		 _vector;
-  unsigned int						 _n;
-  unsigned int						 _a;
-  Renderer						 *_r;
+  std::vector<std::vector<SDL_Texture *> >		_vector;
+  unsigned int						_n;
+  unsigned int						_a;
+  int							_scale;
+  Renderer						*_r;
 };
 
 #endif /* !CHARSETMANAGER_HPP_ */
