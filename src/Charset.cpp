@@ -5,12 +5,13 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Tue Jun 21 15:00:46 2016 guillaume wilmot
+// Last update Tue Jun 21 23:38:56 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include "Charset.hh"
 #include "SDL2/SDL_image.h"
+#include "Scale.hpp"
 
 Charset::Charset()
 {
@@ -23,7 +24,7 @@ Charset::Charset()
   _dir = UP;
   _anim = WALK;
   _frame = 0;
-  _speed = 4;
+  _speed = 5;
   _timer = 0;
   _status = true;
 }
@@ -38,6 +39,8 @@ void		Charset::render(ZBuffer &zbuff, CharacterManager &mgr)
   SDL_Rect	src;
   SDL_Rect	pos;
   TextureManager::surface s;
+  float		percentX = Scale::get()._x * 1.5;
+  float		percentY = Scale::get()._y * 1.5;
 
   if (!(_texture = mgr[_lvl][_anim]))
     return ;
@@ -49,34 +52,43 @@ void		Charset::render(ZBuffer &zbuff, CharacterManager &mgr)
   src.y = 1.0 * (static_cast<int>(_dir) % mgr.getHeight(_lvl, 1 * _anim)) * _h;
   src.w = _w;
   src.h = _h;
-  pos.x = _posX;
-  pos.y = _posY;
-  pos.w = _w;
-  pos.h = _h;
+  pos.x = _posX - ((1.0 * _w * percentX) / 2);
+  pos.y = _posY - ((1.0 * _h * percentY) / 2);
+  pos.w = _w * percentX;
+  pos.h = _h * percentY;
   s.surface = NULL;
   s.texture = _texture;
   zbuff.add(s, &src, &pos, 2);
+
+  /**/
+  static int i = 0;
+  /**/
 
   if (_status && _timer++ == _speed)
     {
       _frame = (_frame + 1) % mgr.getWidth(_lvl, 1 * _anim);
       _timer = 0;
+      /**/
+      i++;
+      /**/
     }
 
   /**/
-  static int i = 0;
-  if (i++ == 30)
+  if (i == mgr.getWidth(_lvl, _anim) - 1)
     {
       i = 0;
       _dir = static_cast<Direction>(_dir + 1);
+      _frame = 0;
       if (_dir == 4)
 	{
 	  _dir = static_cast<Direction>(0);
 	  _anim = static_cast<Anim>(_anim + 1);
+	  _frame = 0;
 	  if (_anim == 3)
 	    {
 	      _anim = static_cast<Anim>(0);
 	      _lvl = (_lvl + 1) % 8;
+	      _frame = 0;
 	    }
 	}
     }

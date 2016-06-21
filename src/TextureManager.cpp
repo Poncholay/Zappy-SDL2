@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Tue Jun 21 14:04:09 2016 guillaume wilmot
+// Last update Tue Jun 21 23:19:11 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -69,7 +69,7 @@ SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale,
   if (!(ret = zoomSurface(s, x2, y2, 0)))
     return (NULL);
   if (update)
-    Scale::get().set(x, y);
+    Scale::get().set(x2, y2);
   SDL_FreeSurface(s);
   return (ret);
 }

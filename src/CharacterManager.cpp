@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 15:10:24 2016 guillaume wilmot
-// Last update Tue Jun 21 15:03:32 2016 guillaume wilmot
+// Last update Tue Jun 21 23:39:15 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -64,11 +64,6 @@ int			CharacterManager::init(int scale, Renderer *r)
   std::string		t;
   const char		*path[3] = {"standing", "moving", "dying"};
 
-  float			percentX;
-  float			percentY;
-  int			w;
-  int			h;
-
   if (!r || !r->get())
     return (std::cerr << "No renderer" << std::endl, -1);
   if (scale != _scale && _scale != -1)
@@ -80,14 +75,8 @@ int			CharacterManager::init(int scale, Renderer *r)
 	t = "./assets/textures/charsets/lvl" + std::to_string(i + 1) + "/" + path[j] + "/image.png";
 	if (!(tmpS = IMG_Load(t.c_str())))
 	  return (std::cerr << "Cannot load " << t << std::endl, -1);
-	if (i)
-	  SDL_QueryTexture(_vector[0][j], NULL, NULL, &w, &h);
-	percentX = i ? (1.0 * tmpS->w * getWidth(0, j)) / (w * getWidth(i, j)) : 1;
-	percentY = i ? (1.0 * tmpS->h * getHeight(0, j)) / (h * getHeight(i, j)) : 1;
-	if (!(tmpS = TextureManager::resize(tmpS, percentX * Scale::get()._x / 2.5 * getWidth(i, j),
-					    percentY * Scale::get()._y / 2 * getHeight(i, j), 3)) ||
-	    !(tmpT = SDL_CreateTextureFromSurface(r->get(), tmpS)))
-	  return (std::cerr << "Could not create texture" << std::endl, -1);
+	if (!(tmpT = SDL_CreateTextureFromSurface(r->get(), tmpS)))
+	  return (-1);
 	SDL_FreeSurface(tmpS);
 	_vector[i].push_back(tmpT);
       }

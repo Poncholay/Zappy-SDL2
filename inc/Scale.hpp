@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun 21 11:45:26 2016 guillaume wilmot
-// Last update Tue Jun 21 12:16:26 2016 guillaume wilmot
+// Last update Tue Jun 21 23:22:34 2016 guillaume wilmot
 //
 
 #ifndef SCALE_HPP_
@@ -17,9 +17,9 @@ class           Scale {
 public:
   static Scale		&get()			{static Scale _s; return (_s);}
 
-  void			set(int x, int y)	{_x = x; _y = y;}
-  int			_x;
-  int			_y;
+  void			set(float x, float y)	{_x = x; _y = y;}
+  float			_x;
+  float			_y;
 
 private:
 
