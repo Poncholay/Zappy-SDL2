@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Tue Jun 21 00:00:40 2016 guillaume wilmot
+// Last update Tue Jun 21 14:29:47 2016 guillaume wilmot
 //
 
 #include "FpsManager.hpp"

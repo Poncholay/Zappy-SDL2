@@ -7,11 +7,10 @@ I didn't include assets and I won't until the project is finished.
 
 ![alt tag](https://raw.githubusercontent.com/Poncholay/Zappy-SDL2/master/demo.png)
 
-
--Rework Charsets just a bit
--Animate smarter
--Implement a global scale instead of resizing every texture.
+-Animations
+-Display ressources
 -Client :
-       -Implement the communication protocol
-       -Implement commands
-       -Implement updater -> Use the Displayer's mutex
+	-Make the map
+	-Implement the communication protocol
+	-Implement commands
+	-Implement updater -> Use the Displayer's mutex

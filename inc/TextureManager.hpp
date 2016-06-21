@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 18:53:10 2016 guillaume wilmot
-// Last update Mon Jun 20 22:38:52 2016 guillaume wilmot
+// Last update Tue Jun 21 12:19:21 2016 guillaume wilmot
 //
 
 #ifndef TEXTUREMANAGER_HPP_
@@ -33,10 +33,10 @@ public:
   int			init(int);
   void			setRenderer(Renderer *r)		{_r = r;}
   void			destroy();
-  int			add(const std::string &, const std::string &, float = 0, float = 0, int = 0);
+  int			add(const std::string &, const std::string &, float = 0, float = 0, int = 0, bool = false);
   int			add(const std::string &, SDL_Surface *);
   int			update();
-  static SDL_Surface	*resize(SDL_Surface *, float, float, int);
+  static SDL_Surface	*resize(SDL_Surface *, float, float, int, bool = false);
 
   CharacterManager	&getCmgr()				{return (_cmgr);}
 

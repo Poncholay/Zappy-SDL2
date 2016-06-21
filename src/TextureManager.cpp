@@ -5,12 +5,13 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Tue Jun 21 00:13:12 2016 guillaume wilmot
+// Last update Tue Jun 21 14:04:09 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include "SDL2_rotozoom.h"
 #include "SDL_image.h"
+#include "Scale.hpp"
 #include "TextureManager.hpp"
 
 TextureManager::~TextureManager() {destroy();}
@@ -33,7 +34,7 @@ int		TextureManager::init(int scale)
   if (scale != _scale && _scale != -1)
     destroy();
   _scale = scale;
-  if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1))
+if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1, true))
     return (-1);
   for (unsigned int i = 1; i < 5; i++)
     if (-1 == add("tree", "./assets/textures/tree" + std::to_string(i) + ".png", scale, scale, 2))
@@ -50,7 +51,7 @@ int		TextureManager::init(int scale)
   return (0);
 }
 
-SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale)
+SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale, bool update)
 {
   SDL_Surface	*ret;
   float		x2;
@@ -67,11 +68,13 @@ SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale)
     }
   if (!(ret = zoomSurface(s, x2, y2, 0)))
     return (NULL);
+  if (update)
+    Scale::get().set(x, y);
   SDL_FreeSurface(s);
   return (ret);
 }
 
-int		TextureManager::add(const std::string &key, const std::string &name, float x, float y, int scale)
+int		TextureManager::add(const std::string &key, const std::string &name, float x, float y, int scale, bool update)
 {
   SDL_Surface	*surface;
 
@@ -81,7 +84,7 @@ int		TextureManager::add(const std::string &key, const std::string &name, float 
       return (-1);
     }
   if (scale)
-    if (!(surface = resize(surface, x, y, scale)))
+    if (!(surface = resize(surface, x, y, scale, update)))
       return (-1);
   return (add(key, surface));
 }

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 13:06:52 2016 guillaume wilmot
-// Last update Tue Jun 21 00:07:29 2016 guillaume wilmot
+// Last update Tue Jun 21 12:40:36 2016 guillaume wilmot
 //
 
 #ifndef CHARSETMANAGER_HPP_
