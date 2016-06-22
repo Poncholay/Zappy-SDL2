@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 13:06:52 2016 guillaume wilmot
-// Last update Tue Jun 21 12:40:36 2016 guillaume wilmot
+// Last update Wed Jun 22 12:33:05 2016 guillaume wilmot
 //
 
 #ifndef CHARSETMANAGER_HPP_
@@ -25,7 +25,7 @@ public:
 
   void				destroy();
   void				setRenderer(Renderer *r) {_r = r;}
-  int				init(int, Renderer *);
+  int				init(Renderer *);
   int				getHeight(unsigned int, unsigned int) const;
   int				getWidth(unsigned int, unsigned int) const;
 
@@ -38,7 +38,7 @@ private:
   std::vector<std::vector<SDL_Texture *> >		_vector;
   unsigned int						_n;
   unsigned int						_a;
-  int							_scale;
+  bool							_loaded;
   Renderer						*_r;
 };
 

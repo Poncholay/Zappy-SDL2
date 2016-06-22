@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Tue Jun 21 23:19:11 2016 guillaume wilmot
+// Last update Wed Jun 22 12:36:55 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -34,7 +34,7 @@ int		TextureManager::init(int scale)
   if (scale != _scale && _scale != -1)
     destroy();
   _scale = scale;
-if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1, true))
+  if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1, true))
     return (-1);
   for (unsigned int i = 1; i < 5; i++)
     if (-1 == add("tree", "./assets/textures/tree" + std::to_string(i) + ".png", scale, scale, 2))
@@ -107,7 +107,7 @@ int		TextureManager::update()
     for (unsigned int i = 0; i < (*it).second.size(); i++)
       if (!_r || !((*it).second[i].texture = SDL_CreateTextureFromSurface(_r->get(), (*it).second[i].surface)))
 	return (-1);
-  _cmgr.init(_scale, _r);
+  _cmgr.init(_r);
   return (0);
 }
 

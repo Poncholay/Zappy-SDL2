@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:23:17 2016 guillaume wilmot
-// Last update Mon Jun 20 11:10:31 2016 guillaume wilmot
+// Last update Wed Jun 22 14:39:59 2016 guillaume wilmot
 //
 
 #ifndef DISPLAYER_HPP_
@@ -16,6 +16,7 @@
 # include "ShapedWindow.hpp"
 # include "ZBuffer.hpp"
 # include "TextureManager.hpp"
+# include "Map.hpp"
 
 class		Displayer {
 public:
@@ -24,17 +25,46 @@ public:
 
   static void		create();
   int			start();
+  int			execute(const std::string &);
 
 private:
   Displayer(const Displayer &) : _win("Zappy"), _zbuff(WINX, WINY)	{}
   Displayer		&operator=(const Displayer &)			{return (*this);}
+
+  //PROTOCOL
+  int			msz(std::istringstream &);
+  int			bct(std::istringstream &);
+  int			tna(std::istringstream &);
+  int			pnw(std::istringstream &);
+  int			ppo(std::istringstream &);
+  int			plv(std::istringstream &);
+  int			pin(std::istringstream &);
+  int			pex(std::istringstream &);
+  int			pbc(std::istringstream &);
+  int			pic(std::istringstream &);
+  int			pie(std::istringstream &);
+  int			pfk(std::istringstream &);
+  int			pdr(std::istringstream &);
+  int			pgt(std::istringstream &);
+  int			pdi(std::istringstream &);
+  int			enw(std::istringstream &);
+  int			eht(std::istringstream &);
+  int			ebo(std::istringstream &);
+  int			edi(std::istringstream &);
+  int			sgt(std::istringstream &);
+  int			seg(std::istringstream &);
+  int			smg(std::istringstream &);
+  int			suc(std::istringstream &);
+  int			sbp(std::istringstream &);
 
   Mutex			_mutex;
   ShapedWindow		_win;
   ZBuffer		_zbuff;
   TextureManager	_tmgr;
   TextureManager	_tmgrChar;
-  //Map		_map;
+  Map			_map;
+
+  std::map<std::string, int (Displayer::*)(std::istringstream &)>	_ptrMtd;
 };
 
 #endif /* !DISPLAYER */

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 15:10:24 2016 guillaume wilmot
-// Last update Tue Jun 21 23:39:15 2016 guillaume wilmot
+// Last update Wed Jun 22 12:32:54 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -18,7 +18,8 @@ CharacterManager::CharacterManager() : _vector(LVLMAX)
 {
   _n = LVLMAX;
   _a = NBANIM;
-  _scale = 0;
+  _loaded = false;
+  _r = NULL;
 }
 
 CharacterManager::~CharacterManager() {destroy();}
@@ -57,18 +58,17 @@ int			CharacterManager::getWidth(unsigned int lvl, unsigned int anim) const
   return (i[lvl][anim]);
 }
 
-int			CharacterManager::init(int scale, Renderer *r)
+int			CharacterManager::init(Renderer *r)
 {
   SDL_Surface		*tmpS;
   SDL_Texture		*tmpT;
   std::string		t;
   const char		*path[3] = {"standing", "moving", "dying"};
 
+  if (_loaded)
+    return (0);
   if (!r || !r->get())
     return (std::cerr << "No renderer" << std::endl, -1);
-  if (scale != _scale && _scale != -1)
-    destroy();
-  _scale = scale;
   for (unsigned int j = 0; j < _a; ++j)
     for (unsigned int i = 0; i < _n; ++i)
       {
@@ -80,5 +80,6 @@ int			CharacterManager::init(int scale, Renderer *r)
 	SDL_FreeSurface(tmpS);
 	_vector[i].push_back(tmpT);
       }
+  _loaded = true;
   return (0);
 }
