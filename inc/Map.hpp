@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 13:05:37 2016 guillaume wilmot
-// Last update Wed Jun 22 12:42:12 2016 guillaume wilmot
+// Last update Wed Jun 22 22:49:38 2016 guillaume wilmot
 //
 
 #ifndef MAP_HPP_
@@ -17,25 +17,31 @@
 
 class		Map {
 public:
-  Map(int, int);
   Map();
   ~Map() {}
 
-  void			setHeight(int s)		{_height = s;}
-  void			setWidth(int s)			{_width = s;}
-  void			render() const;
+  void			setHeight(int s)		{_h = s;}
+  void			setWidth(int s)			{_w = s;}
 
-  int			init();
-  int			getHeight() const		{return (_height);}
-  int			getWidth() const		{return (_width);}
+  void			render() const;
+  void			setRocks(int, int, int *);
+  void			setUp(int, int, int, bool, bool);
+  void			spawnEgg(int, int);
+  void			removeRock(int, int, int);
+  void			addRock(int, int, int);
+  int			init(int, int);
+
+
+  int			getHeight() const		{return (_h);}
+  int			getWidth() const		{return (_w);}
   Tile			*getTile(int x, int y) const	{return (_map[y][x].get());}
 
 private:
   Map(const Map &)					{}
   Map			&operator=(const Map &)		{return (*this);}
 
-  int							_width;
-  int							_height;
+  int							_w;
+  int							_h;
   std::vector<std::vector<ScopedPtr<Tile> > >		_map;
 };
 

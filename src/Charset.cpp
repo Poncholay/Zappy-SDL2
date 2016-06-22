@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Tue Jun 21 23:38:56 2016 guillaume wilmot
+// Last update Wed Jun 22 22:49:07 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -26,7 +26,7 @@ Charset::Charset()
   _frame = 0;
   _speed = 5;
   _timer = 0;
-  _status = true;
+  _dead = false;
 }
 
 Charset::Charset(const Charset &) {}
@@ -64,7 +64,7 @@ void		Charset::render(ZBuffer &zbuff, CharacterManager &mgr)
   static int i = 0;
   /**/
 
-  if (_status && _timer++ == _speed)
+  if (_timer++ == _speed)
     {
       _frame = (_frame + 1) % mgr.getWidth(_lvl, 1 * _anim);
       _timer = 0;
@@ -95,23 +95,19 @@ void		Charset::render(ZBuffer &zbuff, CharacterManager &mgr)
   /**/
 }
 
-void		Charset::done()
-{
-  _status = 0;
-  _frame = 0;
-}
-
 Direction	Charset::getDirection()		const	{return (_dir);}
 Anim		Charset::getAnim()		const	{return (_anim);}
-bool		Charset::getStatus()		const	{return (_status);}
 int		Charset::getSpeed()		const	{return (_speed);}
 int		Charset::getFrame()		const	{return (_frame);}
 int		Charset::getPosX()		const	{return (_posX);}
 int		Charset::getPosY()		const	{return (_posY);}
+void		Charset::setLvl(int s)			{_lvl = s;}
 void		Charset::setDirection(Direction s)	{_dir = s;}
 void		Charset::setAnim(Anim s)		{_anim = s;}
-void		Charset::setStatus(bool s)		{_status = s;}
 void		Charset::setSpeed(int s)		{_speed = s;}
 void		Charset::setPosX(int s)			{_posX = s;}
 void		Charset::setPosY(int s)			{_posY = s;}
 void		Charset::setFrame(int s)		{_frame = s;}
+void		Charset::setTeam(const std::string &s)	{_team = s;}
+void		Charset::setInv(int *s)			{for (int i = 0; i < 7; i++) _inv[i] = s[i];}
+void		Charset::kill()				{_dead = true;}

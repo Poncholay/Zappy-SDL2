@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Wed Jun 22 12:36:55 2016 guillaume wilmot
+// Last update Wed Jun 22 22:34:43 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -111,9 +111,11 @@ int		TextureManager::update()
   return (0);
 }
 
-TextureManager::surface		&TextureManager::get(const std::string &key)
+TextureManager::surface		&TextureManager::get(const std::string &key, int i)
 {
-  return (_map[key][rand() % _map[key].size()]);
+  if (i == -1)
+    return (_map[key][rand() % _map[key].size()]);
+  return (_map[key][i]);
 }
 
 TextureManager::surface		&TextureManager::operator[](const std::string &key)

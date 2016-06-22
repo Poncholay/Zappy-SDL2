@@ -5,11 +5,13 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:25:25 2016 guillaume wilmot
-// Last update Fri Jun 10 14:26:59 2016 guillaume wilmot
+// Last update Wed Jun 22 22:54:12 2016 guillaume wilmot
 //
 
 #ifndef TILE_HPP_
 # define TILE_HPP_
+
+# include <vector>
 
 class		Tile {
 public:
@@ -18,6 +20,10 @@ public:
 private:
   Tile(const Tile &) {}
   Tile	&operator=(const Tile &) {return (*this);}
+
+  int		rocks[7];
+  int		up;
+  bool		res;
 };
 
 #endif /* !TILE_HPP_ */

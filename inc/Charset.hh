@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 17:32:15 2016 guillaume wilmot
-// Last update Mon Jun 20 22:34:34 2016 guillaume wilmot
+// Last update Wed Jun 22 22:49:16 2016 guillaume wilmot
 //
 
 #ifndef CHARSET_HH_
@@ -36,22 +36,24 @@ public:
   ~Charset();
 
   void			render(ZBuffer &, CharacterManager &);
-  void			done();
 
   Direction		getDirection() const;
   Anim			getAnim() const;
-  bool			getStatus() const;
   int			getSpeed() const;
   int			getFrame() const;
   int			getPosX() const;
   int			getPosY() const;
+  void			setLvl(int);
   void			setDirection(Direction);
   void			setAnim(Anim);
-  void			setStatus(bool);
   void			setSpeed(int);
   void			setPosX(int);
   void			setPosY(int);
   void			setFrame(int);
+  void			setTeam(const std::string &);
+  void			setInv(int *);
+  void			kill();
+
 private:
   Charset(const Charset &);
   Charset	&operator=(const Charset &);
@@ -62,6 +64,7 @@ private:
   Direction	_dir;
   Anim		_anim;
 
+  bool		_dead;
   int           _w;
   int           _h;
   int		_posX;
@@ -69,7 +72,9 @@ private:
   int           _frame;
   int		_speed;
   int		_timer;
-  bool		_status;
+  int		_inv[7];
+
+  std::string	_team;
 };
 
 #endif /* !CHARSET_HH_ */

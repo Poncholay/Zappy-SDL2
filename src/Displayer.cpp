@@ -5,11 +5,13 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Wed Jun 22 14:41:38 2016 guillaume wilmot
+// Last update Wed Jun 22 23:08:25 2016 guillaume wilmot
 //
 
+#include <algorithm>
 #include <sstream>
 #include <string>
+#include "ScopedLock.hpp"
 #include "FpsManager.hpp"
 #include "Displayer.hpp"
 #include "Charset.hh"
@@ -40,6 +42,7 @@ Displayer::Displayer() : _win("Zappy", 15, 15), _zbuff(WINX, WINY)
   _ptrMtd["smg"] = &Displayer::smg;
   _ptrMtd["suc"] = &Displayer::suc;
   _ptrMtd["sbp"] = &Displayer::sbp;
+  _time = 0;
 }
 
 void			Displayer::create()
@@ -67,9 +70,11 @@ int			Displayer::start()
     return (-1);
   _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
 
+  /**/
   Charset            C;
   C.setPosY(300);
   C.setPosX(300);
+  /**/
 
   while (1)
     {
@@ -89,7 +94,9 @@ int			Displayer::start()
       dims = _win.getDimensions();
       _win.getRenderer().renderClear();
       _win.getRenderer().renderCopy(_win.getBackground(), dims, dims);
+      /**/
       C.render(_win.getZBuffer(), _tmgr.getCmgr());
+      /**/
       _win.createForeground();
       _win.getRenderer().renderPresent();
       fpsMgr.show();
@@ -106,6 +113,7 @@ int			Displayer::execute(const std::string &arg)
   if (st >> token)
     if (_ptrMtd[token])
       {
+	ScopedLock	lock(_mutex);
 	return ((this->*_ptrMtd[token])(st));
       }
   return (-1);
@@ -113,32 +121,251 @@ int			Displayer::execute(const std::string &arg)
 
 int			Displayer::msz(std::istringstream &arg)
 {
-  std::string		token;
+  int			x, y;
+  std::string		err;
 
-  while (arg >> token)
-    std::cout << token << std::endl;
+  if (!(arg >> x) || !(arg >> y) || (arg >> err))
+    return (std::cerr << "Received bad command : msz" << std::endl, -1);
+  _map.init(x, y);
   return (0);
 }
-int			Displayer::bct(std::istringstream &) {return (0);}
-int			Displayer::tna(std::istringstream &) {return (0);}
-int			Displayer::pnw(std::istringstream &) {return (0);}
-int			Displayer::ppo(std::istringstream &) {return (0);}
-int			Displayer::plv(std::istringstream &) {return (0);}
-int			Displayer::pin(std::istringstream &) {return (0);}
+
+int			Displayer::bct(std::istringstream &arg)
+{
+  int			x, y;
+  int			rocks[7];
+  std::string		err;
+
+  if (!(arg >> x) || !(arg >> y))
+    return (std::cerr << "Received bad command : bct" << std::endl, -1);
+  for (unsigned int i = 0; i < 7; i++)
+    if (!(arg >> rocks[i]))
+      return (std::cerr << "Received bad command : msz" << std::endl, -1);
+  if ((arg >> err))
+    return (std::cerr << "Received bad command : msz" << std::endl, -1);
+  _map.setRocks(x, y, rocks);
+  return (0);
+}
+
+int			Displayer::tna(std::istringstream &arg)
+{
+  std::string		tmp;
+
+  _teams.clear();
+  while (arg >> tmp)
+    _teams.push_back(tmp);
+  return (0);
+}
+
+int			Displayer::pnw(std::istringstream &arg)
+{
+  int			id, x, y, lvl;
+  char			dir;
+  std::string		team;
+  std::string		err;
+
+  if (!(arg >> id)  || !(arg >> x)   || !(arg >> y) ||
+      !(arg >> dir) || !(arg >> lvl) || !(arg >> team) || (arg >> err))
+    return (std::cerr << "Received bad command : pnw" << std::endl, -1);
+  if (_players[id])
+    return (std::cerr << "Player" << id << "already exists" << std::endl, -1);
+  _players[id] = new Charset;
+  _players[id]->setPosX(x);
+  _players[id]->setPosY(y);
+  _players[id]->setLvl(lvl);
+  _players[id]->setTeam(team);
+  _players[id]->setDirection(static_cast<Direction>(dir % 4));
+  return (0);
+}
+
+int			Displayer::ppo(std::istringstream &arg)
+{
+  int			id, x, y;
+  char			dir;
+  std::string		err;
+
+  if (!(arg >> id) || !(arg >> x) || !(arg >> y) || !(arg >> dir) || (arg >> err))
+    return (std::cerr << "Received bad command : ppo" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No Player" << id << std::endl, -1);
+  _players[id]->setPosX(x);
+  _players[id]->setPosY(y);
+  _players[id]->setDirection(static_cast<Direction>(dir % 4));
+  return (0);
+}
+
+int			Displayer::plv(std::istringstream &arg)
+{
+  int			id, lvl;
+  std::string		err;
+
+  if (!(arg >> id) || !(arg >> lvl) || (arg >> err))
+    return (std::cerr << "Received bad command : pvl" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No Player" << id << std::endl, -1);
+  _players[id]->setLvl(lvl);
+  return (0);
+}
+
+int			Displayer::pin(std::istringstream &arg)
+{
+  int			id, x, y;
+  int			rocks[7];
+  std::string		err;
+
+  if (!(arg >> id) || !(arg >> x) || !(arg >> y) || (arg >> err))
+    return (std::cerr << "Received bad command : pin" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No Player" << id << std::endl, -1);
+  _players[id]->setInv(rocks);
+  return (0);
+}
+
+int			Displayer::pic(std::istringstream &arg)
+{
+  int			x, y, lvl;
+
+  if (!(arg >> x) || !(arg >> y) || !(arg >> lvl))
+    return (std::cerr << "Received bad command : pic" << std::endl, -1);
+  _map.setUp(x, y, lvl, true, false);
+  return (0);
+}
+int			Displayer::pie(std::istringstream &arg)
+{
+  int			x, y;
+  bool			res;
+
+  if (!(arg >> x) || !(arg >> y) || !(arg >> res))
+    return (std::cerr << "Received bad command : pic" << std::endl, -1);
+  _map.setUp(x, y, 0, false, res);
+  return (0);
+}
+
+int			Displayer::pdr(std::istringstream &arg)
+{
+  int			id, i;
+  std::string		err;
+
+  if (!(arg >> id) || !(arg >> i) || (arg >> err))
+    return (std::cerr << "Received bad command : pdr" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No Player" << id << std::endl, -1);
+  _map.addRock(_players[id]->getPosX(), _players[id]->getPosY(), i);
+  return (0);
+}
+
+int			Displayer::pgt(std::istringstream &arg)
+{
+  int			id, i;
+  std::string		err;
+
+  if (!(arg >> id) || !(arg >> i) || (arg >> err))
+    return (std::cerr << "Received bad command : pgt" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No Player" << id << std::endl, -1);
+  _map.removeRock(_players[id]->getPosX(), _players[id]->getPosY(), i);
+  return (0);
+}
+
+int			Displayer::pdi(std::istringstream &arg)
+{
+  int			id;
+  std::string		err;
+
+  if (!(arg >> id) || (arg >> err))
+    return (std::cerr << "Received bad command : pdi" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No Player" << id << std::endl, -1);
+  _players[id]->kill();
+  return (0);
+}
+
+int			Displayer::enw(std::istringstream &arg)
+{
+  int			ide, idp, x, y;
+  std::string		err;
+
+  if (!(arg >> ide) || !(arg >> idp) || !(arg >> x) || !(arg >> y) || (arg >> err))
+    return (std::cerr << "Received bad command : enw" << std::endl, -1);
+  // if (!_eggs[ide])
+  //   return (std::cerr << "Egg " << id << "Already exists" << std::endl, -1);
+  if (!_players[idp])
+    return (std::cerr << "No Player" << idp << std::endl, -1);
+  // _eggs[ide] = new Egg(x, y, idp);
+  return (0);
+}
+
+int			Displayer::eht(std::istringstream &arg)
+{
+  int			ide;
+  std::string		err;
+
+  if (!(arg >> ide) || (arg >> err))
+    return (std::cerr << "Received bad command : eht" << std::endl, -1);
+  // if (!_eggs[ide])
+  //   return (std::cerr << "No Egg " << id << std::endl, -1);
+  // _eggs[ide]->setOk();
+  return (0);
+}
+
+int			Displayer::ebo(std::istringstream &arg)
+{
+  int			ide;
+  std::string		err;
+
+  if (!(arg >> ide) || (arg >> err))
+    return (std::cerr << "Received bad command : ebo" << std::endl, -1);
+  // if (!_eggs[ide])
+  //   return (std::cerr << "No Egg " << id << std::endl, -1);
+  // delete _eggs[ide];
+  // _eggs[ide] = NULL;
+  return (0);
+}
+
+int			Displayer::edi(std::istringstream &arg)
+{
+  int			ide;
+  std::string		err;
+
+  if (!(arg >> ide) || (arg >> err))
+    return (std::cerr << "Received bad command : edi" << std::endl, -1);
+  // if (!_eggs[ide])
+  //   return (std::cerr << "No Egg " << id << std::endl, -1);
+  // delete _eggs[ide];
+  // _eggs[ide] = NULL;
+  return (0);
+}
+
+int			Displayer::sgt(std::istringstream &arg)
+{
+  int			t;
+  std::string		err;
+
+  if (!(arg >> t) || (arg >> err))
+    return (std::cerr << "Received bad command : sgt" << std::endl, -1);
+  _time = t;
+  return (0);
+}
+
+int			Displayer::seg(std::istringstream &arg)
+{
+  std::string		team;
+  std::string		err;
+
+  if (!(arg >> team) || (arg >> err))
+    return (std::cerr << "Received bad command : seg" << std::endl, -1);
+  auto it = find(_teams.begin(), _teams.end(), team);
+  if (it == _teams.end())
+    std::cerr << "No such team : " << team << std::endl;
+  _teams.clear();
+  _teams.push_back(team);
+  _end = true;
+  return (0);
+}
+
 int			Displayer::pex(std::istringstream &) {return (0);}
 int			Displayer::pbc(std::istringstream &) {return (0);}
-int			Displayer::pic(std::istringstream &) {return (0);}
-int			Displayer::pie(std::istringstream &) {return (0);}
 int			Displayer::pfk(std::istringstream &) {return (0);}
-int			Displayer::pdr(std::istringstream &) {return (0);}
-int			Displayer::pgt(std::istringstream &) {return (0);}
-int			Displayer::pdi(std::istringstream &) {return (0);}
-int			Displayer::enw(std::istringstream &) {return (0);}
-int			Displayer::eht(std::istringstream &) {return (0);}
-int			Displayer::ebo(std::istringstream &) {return (0);}
-int			Displayer::edi(std::istringstream &) {return (0);}
-int			Displayer::sgt(std::istringstream &) {return (0);}
-int			Displayer::seg(std::istringstream &) {return (0);}
 int			Displayer::smg(std::istringstream &) {return (0);}
 int			Displayer::suc(std::istringstream &) {return (0);}
 int			Displayer::sbp(std::istringstream &) {return (0);}
