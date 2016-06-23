@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Wed Jun 22 23:08:25 2016 guillaume wilmot
+// Last update Thu Jun 23 10:05:52 2016 guillaume wilmot
 //
 
 #include <algorithm>
@@ -49,12 +49,14 @@ void			Displayer::create()
 {
   Displayer		d;
 
+  Displayer::get(&d);
   if (SDL_VideoInit(NULL) == -1)
     {
       std::cerr << "Could not initialize SDL video." << std::endl;
       return ;
     }
   d.start();
+  Displayer::get(NULL, true);
   SDL_VideoQuit();
 }
 
@@ -126,6 +128,8 @@ int			Displayer::msz(std::istringstream &arg)
 
   if (!(arg >> x) || !(arg >> y) || (arg >> err))
     return (std::cerr << "Received bad command : msz" << std::endl, -1);
+  if (x > 100 || y > 100 || x < 1 || y < 1)
+    return (std::cerr << "msz : x and y must be <= 100 && >= 1" << std::endl, -1);
   _map.init(x, y);
   return (0);
 }
@@ -140,9 +144,9 @@ int			Displayer::bct(std::istringstream &arg)
     return (std::cerr << "Received bad command : bct" << std::endl, -1);
   for (unsigned int i = 0; i < 7; i++)
     if (!(arg >> rocks[i]))
-      return (std::cerr << "Received bad command : msz" << std::endl, -1);
+      return (std::cerr << "Received bad command : bct" << std::endl, -1);
   if ((arg >> err))
-    return (std::cerr << "Received bad command : msz" << std::endl, -1);
+    return (std::cerr << "Received bad command : bct" << std::endl, -1);
   _map.setRocks(x, y, rocks);
   return (0);
 }
@@ -236,7 +240,7 @@ int			Displayer::pie(std::istringstream &arg)
   bool			res;
 
   if (!(arg >> x) || !(arg >> y) || !(arg >> res))
-    return (std::cerr << "Received bad command : pic" << std::endl, -1);
+    return (std::cerr << "Received bad command : pie" << std::endl, -1);
   _map.setUp(x, y, 0, false, res);
   return (0);
 }

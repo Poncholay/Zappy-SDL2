@@ -5,13 +5,14 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:23:17 2016 guillaume wilmot
-// Last update Wed Jun 22 23:03:34 2016 guillaume wilmot
+// Last update Thu Jun 23 10:11:15 2016 guillaume wilmot
 //
 
 #ifndef DISPLAYER_HPP_
 # define DISPLAYER_HPP_
 
 # include "SDL.h"
+# include "ScopedLock.hpp"
 # include "Mutex.hpp"
 # include "ShapedWindow.hpp"
 # include "ZBuffer.hpp"
@@ -25,6 +26,16 @@ public:
   ~Displayer()								{}
 
   static void		create();
+  static Displayer	*get(Displayer *d = NULL, bool o = false)
+  {
+    static Mutex	mutex;
+    ScopedLock		lock(mutex);
+    static Displayer	*dis = NULL;
+    if (o || d)
+      dis = d;
+    return (dis);
+  }
+
   int			start();
   int			execute(const std::string &);
 
