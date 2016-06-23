@@ -5,14 +5,19 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:22:12 2016 guillaume wilmot
-// Last update Thu Jun 23 23:16:28 2016 guillaume wilmot
+// Last update Fri Jun 24 00:39:05 2016 guillaume wilmot
 //
 
 #include "Map.hpp"
 
 Map::Map() {}
 
-void		Map::render() const {}
+void		Map::render(ZBuffer &z) const
+{
+  for (unsigned int i = 0; i < _h; i++)
+    for (unsigned int j = 0; j < _w; j++)
+      _map[i][j].get()->render(z);
+}
 
 void		Map::init()
 {

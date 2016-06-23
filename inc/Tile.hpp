@@ -5,13 +5,14 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:25:25 2016 guillaume wilmot
-// Last update Thu Jun 23 18:46:25 2016 guillaume wilmot
+// Last update Fri Jun 24 00:39:56 2016 guillaume wilmot
 //
 
 #ifndef TILE_HPP_
 # define TILE_HPP_
 
 # include <vector>
+# include "ZBuffer.hpp"
 
 class		Tile {
 public:
@@ -21,6 +22,10 @@ public:
   void		setRocks(int *r) {for (int i = 0; i < 7; i++) _rocks[i] = r[i];}
   void		setUp(int lvl, int active, bool res) {_lvl = lvl; _active = active; _res = res;}
   void		addRock(int id, bool add) {_rocks[id] += (add ? -1 : 1);}
+  void		render(ZBuffer &buff) const
+  {
+    (void)buff;
+  }
 
 private:
   Tile(const Tile &) {}

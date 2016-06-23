@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 13:05:37 2016 guillaume wilmot
-// Last update Thu Jun 23 23:16:53 2016 guillaume wilmot
+// Last update Fri Jun 24 00:39:14 2016 guillaume wilmot
 //
 
 #ifndef MAP_HPP_
@@ -14,6 +14,7 @@
 # include <vector>
 # include "Tile.hpp"
 # include "ScopedPtr.hpp"
+# include "ZBuffer.hpp"
 
 class		Map {
 public:
@@ -23,7 +24,7 @@ public:
   void			setHeight(int s)		{_h = s;}
   void			setWidth(int s)			{_w = s;}
 
-  void			render() const;
+  void			render(ZBuffer &) const;
   void			setRocks(unsigned int, unsigned int, int *);
   void			setUp(unsigned int, unsigned int, int, bool, bool);
   void			spawnEgg(unsigned int, unsigned int);
