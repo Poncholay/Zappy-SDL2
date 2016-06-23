@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:06:21 2016 guillaume wilmot
-// Last update Mon Jun 20 22:37:57 2016 guillaume wilmot
+// Last update Thu Jun 23 10:48:52 2016 guillaume wilmot
 //
 
 #ifndef SHAPEDWINDOW_HPP_
@@ -44,8 +44,8 @@ public:
   void			createForeground();
   SDL_Surface		*createShape();
 
-  int			getHeight()		const		{return (_dims.h);}
-  int			getWidth()		const		{return (_dims.w);}
+  int			getHeight()		const		{return (_mapHeight);}
+  int			getWidth()		const		{return (_mapWidth);}
   SDL_Surface		*getScreen()		const		{return (_screen);}
   SDL_Texture		*getBackground()	const		{return (_tbg);}
   SDL_Rect		getDimensions()		const		{return (_dims);}

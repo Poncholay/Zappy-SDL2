@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 13:05:37 2016 guillaume wilmot
-// Last update Wed Jun 22 22:49:38 2016 guillaume wilmot
+// Last update Thu Jun 23 10:43:32 2016 guillaume wilmot
 //
 
 #ifndef MAP_HPP_
@@ -29,8 +29,6 @@ public:
   void			spawnEgg(int, int);
   void			removeRock(int, int, int);
   void			addRock(int, int, int);
-  int			init(int, int);
-
 
   int			getHeight() const		{return (_h);}
   int			getWidth() const		{return (_w);}

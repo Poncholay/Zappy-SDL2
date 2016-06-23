@@ -5,7 +5,7 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Thu Jun 23 10:13:34 2016 guillaume wilmot
+// Last update Thu Jun 23 15:28:19 2016 guillaume wilmot
 */
 
 #include <iostream>
@@ -13,8 +13,11 @@
 #include <unistd.h>
 #include "SDL.h"
 #include "Displayer.hpp"
+#include "ThreadManager.hpp"
 
 #define PURPLE	"\033[01;35m"
+#define RED	"\033[01;31m"
+#define VERT	"\033[01;32m"
 #define END	"\033[0m"
 
 void			help()
@@ -28,15 +31,15 @@ void			help()
   std::cout << "Enjoy !" << std::endl;
 }
 
-void			create(bool *stop)
+void			create(bool &stop)
 {
   std::string		tmp;
   fd_set		readf;
   struct timeval	tv;
 
-  while (!Displayer::get() && !(*stop))
+  while (!Displayer::get() && !stop)
     usleep(100000);
-  while (!(*stop))
+  while (!stop)
     {
       tv.tv_sec = 0;
       tv.tv_usec = 100000;
@@ -45,25 +48,30 @@ void			create(bool *stop)
       if (select(1, &readf, NULL, NULL, &tv) == -1)
 	return ;
       if (FD_ISSET(0, &readf))
-	while (std::getline(std::cin, tmp))
-	  if (Displayer::get()->execute(tmp) == -1)
-	    std::cerr << "Command not found" << std::endl;
-	  else
-	    std::cout << "Ok" << std::endl;
+	{
+	  if (std::getline(std::cin, tmp))
+	    {
+	      std::cerr << tmp << " : ";
+	      if (Displayer::get())
+		std::cerr << (Displayer::get()->execute(tmp) == -1 ?
+			     std::string(RED) + "Command not found" + std::string(END) :
+			     std::string(VERT) + "Ok" + std::string(END)) << std::endl;
+	    }
+	  else if (std::cin.eof())
+	    {
+	      stop = true;
+	      return ;
+	    }
+	}
     }
-  return ;
 }
 
 int			main()
 {
-  std::thread		*displayer;
-  std::thread		*client;
   bool			stop = false;
 
   help();
-  displayer = new std::thread(Displayer::create);
-  client = new std::thread(create, &stop);
-  displayer->join();
-  stop = true;
-  client->join();
+  ThreadManager::get() << (new std::thread(Displayer::create, std::ref(stop)));
+  ThreadManager::get() << (new std::thread(create, std::ref(stop)));
+  ThreadManager::get().end();
 }

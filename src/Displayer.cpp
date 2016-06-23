@@ -5,18 +5,19 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Thu Jun 23 10:05:52 2016 guillaume wilmot
+// Last update Thu Jun 23 15:17:57 2016 guillaume wilmot
 //
 
 #include <algorithm>
 #include <sstream>
 #include <string>
+#include <unistd.h>
 #include "ScopedLock.hpp"
 #include "FpsManager.hpp"
 #include "Displayer.hpp"
 #include "Charset.hh"
 
-Displayer::Displayer() : _win("Zappy", 15, 15), _zbuff(WINX, WINY)
+Displayer::Displayer() : _win("Zappy", 0, 0), _zbuff(WINX, WINY)
 {
   _ptrMtd["msz"] = &Displayer::msz;
   _ptrMtd["bct"] = &Displayer::bct;
@@ -45,7 +46,7 @@ Displayer::Displayer() : _win("Zappy", 15, 15), _zbuff(WINX, WINY)
   _time = 0;
 }
 
-void			Displayer::create()
+void			Displayer::create(bool &stop)
 {
   Displayer		d;
 
@@ -55,12 +56,12 @@ void			Displayer::create()
       std::cerr << "Could not initialize SDL video." << std::endl;
       return ;
     }
-  d.start();
+  d.start(stop);
   Displayer::get(NULL, true);
   SDL_VideoQuit();
 }
 
-int			Displayer::start()
+int			Displayer::start(bool &stop)
 {
   FpsManager		fpsMgr;
   SDL_Event		ev;
@@ -68,8 +69,8 @@ int			Displayer::start()
 
   _win.setTmgr(&_tmgr);
   _win.setZbuff(&_zbuff);
-  if (_win.create() == -1)
-    return (-1);
+  while ((_win.getHeight() == 0 || _win.getWidth() == 0) && !stop)
+    usleep(100000);
   _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
 
   /**/
@@ -78,15 +79,20 @@ int			Displayer::start()
   C.setPosX(300);
   /**/
 
-  while (1)
+  while (!stop)
     {
       fpsMgr.apply();
 
+      _mutex.lock();
       while (SDL_PollEvent(&ev))
 	{
           if (ev.type == SDL_QUIT || ev.type == SDL_KEYDOWN)
             if (ev.type == SDL_QUIT || ev.key.keysym.sym == SDLK_ESCAPE)
-              return (0);
+	      {
+		_mutex.unlock();
+		SDL_VideoQuit();
+		return (stop = true, 0);
+	      }
           if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN ||
               ev.type == SDL_MOUSEBUTTONUP || ev.type == SDL_MOUSEMOTION ||
               ev.type == SDL_MOUSEWHEEL)
@@ -100,11 +106,14 @@ int			Displayer::start()
       C.render(_win.getZBuffer(), _tmgr.getCmgr());
       /**/
       _win.createForeground();
-      _win.getRenderer().renderPresent();
+
+      Renderer		&r = _win.getRenderer();
+      _mutex.unlock();
+      r.renderPresent();
       fpsMgr.show();
     }
   SDL_VideoQuit();
-  return (0);
+  return (stop = true, 0);
 }
 
 int			Displayer::execute(const std::string &arg)
@@ -130,7 +139,11 @@ int			Displayer::msz(std::istringstream &arg)
     return (std::cerr << "Received bad command : msz" << std::endl, -1);
   if (x > 100 || y > 100 || x < 1 || y < 1)
     return (std::cerr << "msz : x and y must be <= 100 && >= 1" << std::endl, -1);
-  _map.init(x, y);
+  _win.setMapWidth(x);
+  _win.setMapHeight(y);
+  _map.setWidth(x);
+  _map.setHeight(y);
+  _win.create();
   return (0);
 }
 
@@ -217,7 +230,12 @@ int			Displayer::pin(std::istringstream &arg)
   int			rocks[7];
   std::string		err;
 
-  if (!(arg >> id) || !(arg >> x) || !(arg >> y) || (arg >> err))
+  if (!(arg >> id) || !(arg >> x) || !(arg >> y))
+    return (std::cerr << "Received bad command : pin" << std::endl, -1);
+  for (unsigned int i = 0; i < 7; i++)
+    if (!(arg >> rocks[i]))
+      return (std::cerr << "Received bad command : pin" << std::endl, -1);
+  if ((arg >> err))
     return (std::cerr << "Received bad command : pin" << std::endl, -1);
   if (!_players[id])
     return (std::cerr << "No Player" << id << std::endl, -1);

@@ -5,7 +5,7 @@
 ## Login   <noboud_n@epitech.net>
 ##
 ## Started on  Tue Apr 12 14:58:00 2016 Nyrandone Noboud-Inpeng
-## Last update Mon Jun 20 21:19:13 2016 guillaume wilmot
+## Last update Thu Jun 23 15:21:43 2016 guillaume wilmot
 ##
 
 SRC	= Charset.cpp		\
@@ -17,6 +17,7 @@ SRC	= Charset.cpp		\
 	  Renderer.cpp		\
 	  ShapedWindow.cpp	\
 	  TextureManager.cpp	\
+	  ThreadManager.cpp	\
 	  ZBuffer.cpp		\
 	  ZClient.cpp
 
