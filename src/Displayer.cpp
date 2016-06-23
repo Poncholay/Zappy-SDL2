@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Thu Jun 23 15:17:57 2016 guillaume wilmot
+// Last update Thu Jun 23 22:52:29 2016 guillaume wilmot
 //
 
 #include <algorithm>
@@ -44,9 +44,10 @@ Displayer::Displayer() : _win("Zappy", 0, 0), _zbuff(WINX, WINY)
   _ptrMtd["suc"] = &Displayer::suc;
   _ptrMtd["sbp"] = &Displayer::sbp;
   _time = 0;
+  _end = false;
 }
 
-void			Displayer::create(bool &stop)
+void			Displayer::create(bool &stop, bool &start)
 {
   Displayer		d;
 
@@ -56,12 +57,12 @@ void			Displayer::create(bool &stop)
       std::cerr << "Could not initialize SDL video." << std::endl;
       return ;
     }
-  d.start(stop);
+  d.start(stop, start);
   Displayer::get(NULL, true);
   SDL_VideoQuit();
 }
 
-int			Displayer::start(bool &stop)
+int			Displayer::start(bool &stop, bool &start)
 {
   FpsManager		fpsMgr;
   SDL_Event		ev;
@@ -70,7 +71,10 @@ int			Displayer::start(bool &stop)
   _win.setTmgr(&_tmgr);
   _win.setZbuff(&_zbuff);
   while ((_win.getHeight() == 0 || _win.getWidth() == 0) && !stop)
-    usleep(100000);
+    {
+      start = true;
+      usleep(100000);
+    }
   _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
 
   /**/
@@ -143,6 +147,7 @@ int			Displayer::msz(std::istringstream &arg)
   _win.setMapHeight(y);
   _map.setWidth(x);
   _map.setHeight(y);
+  _map.init();
   _win.create();
   return (0);
 }

@@ -5,21 +5,63 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:22:12 2016 guillaume wilmot
-// Last update Thu Jun 23 10:43:26 2016 guillaume wilmot
+// Last update Thu Jun 23 23:16:28 2016 guillaume wilmot
 //
 
 #include "Map.hpp"
 
-Map::Map() : _map(0, std::vector<ScopedPtr<Tile> >(0)) {}
+Map::Map() {}
 
 void		Map::render() const {}
 
-void		Map::setRocks(int, int, int *) {}
+void		Map::init()
+{
+  if (_w == 0 || _h == 0)
+    return ;
+  _map = std::vector<std::vector<ScopedPtr<Tile> > >(_h);
+  for (unsigned int i = 0; i < _h; i++)
+    _map[i] = std::vector<ScopedPtr<Tile> >(_w);
+  for (unsigned int i = 0; i < _h; i++)
+    for (unsigned int j = 0; j < _h; j++)
+      _map[i][j].set(new Tile(i, j));
+}
 
-void		Map::setUp(int, int, int, bool, bool) {}
+void		Map::setRocks(unsigned int x, unsigned int y, int *rocks)
+{
+  if (x >= _w || y >= _h)
+    return ;
+  create(x, y);
+  _map[y][x].get()->setRocks(rocks);
+}
 
-void		Map::spawnEgg(int, int) {}
+void		Map::setUp(unsigned int x, unsigned int y, int lvl, bool active, bool result)
+{
+  if (x >= _w || y >= _h)
+    return ;
+  create(x, y);
+  _map[y][x].get()->setUp(lvl, active, result);
+}
 
-void		Map::removeRock(int, int, int) {}
+void		Map::removeRock(unsigned int x, unsigned int y, int id)
+{
+  if (x >= _w || y >= _h)
+    return ;
+  create(x, y);
+  _map[y][x].get()->addRock(id, false);
+}
 
-void		Map::addRock(int, int, int) {}
+void		Map::addRock(unsigned int x, unsigned int y, int id)
+{
+  if (x >= _w || y >= _h)
+    return ;
+  create(x, y);
+  _map[y][x].get()->addRock(id, true);
+}
+
+void		Map::create(unsigned int x, unsigned int y)
+{
+  if (x >= _w || y >= _h)
+    return ;
+  if (!_map[y][x].get())
+    _map[y][x].set(new Tile(x, y));
+}

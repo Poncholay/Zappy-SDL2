@@ -5,7 +5,7 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Thu Jun 23 15:28:19 2016 guillaume wilmot
+// Last update Thu Jun 23 23:17:59 2016 guillaume wilmot
 */
 
 #include <iostream>
@@ -31,14 +31,18 @@ void			help()
   std::cout << "Enjoy !" << std::endl;
 }
 
-void			create(bool &stop)
+void			create(bool &stop, bool &start)
 {
   std::string		tmp;
   fd_set		readf;
   struct timeval	tv;
 
-  while (!Displayer::get() && !stop)
-    usleep(100000);
+  while (!Displayer::get() || !start)
+    {
+      if (stop)
+	return ;
+      usleep(100000);
+    }
   while (!stop)
     {
       tv.tv_sec = 0;
@@ -54,8 +58,8 @@ void			create(bool &stop)
 	      std::cerr << tmp << " : ";
 	      if (Displayer::get())
 		std::cerr << (Displayer::get()->execute(tmp) == -1 ?
-			     std::string(RED) + "Command not found" + std::string(END) :
-			     std::string(VERT) + "Ok" + std::string(END)) << std::endl;
+			      std::string(RED) + "Command not found" + std::string(END) :
+			      std::string(VERT) + "Ok" + std::string(END)) << std::endl;
 	    }
 	  else if (std::cin.eof())
 	    {
@@ -69,9 +73,10 @@ void			create(bool &stop)
 int			main()
 {
   bool			stop = false;
+  bool			start = false;
 
   help();
-  ThreadManager::get() << (new std::thread(Displayer::create, std::ref(stop)));
-  ThreadManager::get() << (new std::thread(create, std::ref(stop)));
+  ThreadManager::get() << (new std::thread(Displayer::create, std::ref(stop), std::ref(start)));
+  ThreadManager::get() << (new std::thread(create, std::ref(stop), std::ref(start)));
   ThreadManager::get().end();
 }

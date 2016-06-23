@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Wed Jun 22 22:49:07 2016 guillaume wilmot
+// Last update Thu Jun 23 23:18:57 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -110,4 +110,4 @@ void		Charset::setPosY(int s)			{_posY = s;}
 void		Charset::setFrame(int s)		{_frame = s;}
 void		Charset::setTeam(const std::string &s)	{_team = s;}
 void		Charset::setInv(int *s)			{for (int i = 0; i < 7; i++) _inv[i] = s[i];}
-void		Charset::kill()				{_dead = true;}
+void		Charset::kill()				{_dead = true; _anim = DIE;}

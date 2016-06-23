@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:23:17 2016 guillaume wilmot
-// Last update Thu Jun 23 14:25:08 2016 guillaume wilmot
+// Last update Thu Jun 23 22:23:24 2016 guillaume wilmot
 //
 
 #ifndef DISPLAYER_HPP_
@@ -25,7 +25,7 @@ public:
   Displayer();
   ~Displayer()								{}
 
-  static void		create(bool &);
+  static void		create(bool &, bool &);
   static Displayer	*get(Displayer *d = NULL, bool o = false)
   {
     static Mutex	mutex;
@@ -36,7 +36,7 @@ public:
     return (dis);
   }
 
-  int			start(bool &);
+  int			start(bool &, bool &);
   int			execute(const std::string &);
 
 private:

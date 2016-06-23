@@ -5,10 +5,7 @@ It's a client that connects to the game server and provides a representation of 
 
 ![alt tag](https://raw.githubusercontent.com/Poncholay/Zappy-SDL2/master/demo.png)
 
--Animations
 -Display ressources
 -Client :
-	-Make the map
-	-Implement the communication protocol
 	-Implement commands
 	-Implement updater -> Use the Displayer's mutex

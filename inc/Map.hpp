@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 13:05:37 2016 guillaume wilmot
-// Last update Thu Jun 23 10:43:32 2016 guillaume wilmot
+// Last update Thu Jun 23 23:16:53 2016 guillaume wilmot
 //
 
 #ifndef MAP_HPP_
@@ -24,22 +24,25 @@ public:
   void			setWidth(int s)			{_w = s;}
 
   void			render() const;
-  void			setRocks(int, int, int *);
-  void			setUp(int, int, int, bool, bool);
-  void			spawnEgg(int, int);
-  void			removeRock(int, int, int);
-  void			addRock(int, int, int);
+  void			setRocks(unsigned int, unsigned int, int *);
+  void			setUp(unsigned int, unsigned int, int, bool, bool);
+  void			spawnEgg(unsigned int, unsigned int);
+  void			removeRock(unsigned int, unsigned int, int);
+  void			addRock(unsigned int, unsigned int, int);
+  void			init();
 
-  int			getHeight() const		{return (_h);}
-  int			getWidth() const		{return (_w);}
+  unsigned int		getHeight() const		{return (_h);}
+  unsigned int		getWidth() const		{return (_w);}
   Tile			*getTile(int x, int y) const	{return (_map[y][x].get());}
 
 private:
+  void			create(unsigned int, unsigned int);
+
   Map(const Map &)					{}
   Map			&operator=(const Map &)		{return (*this);}
 
-  int							_w;
-  int							_h;
+  unsigned int						_w;
+  unsigned int						_h;
   std::vector<std::vector<ScopedPtr<Tile> > >		_map;
 };
 
