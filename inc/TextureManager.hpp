@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 18:53:10 2016 guillaume wilmot
-// Last update Wed Jun 22 22:33:17 2016 guillaume wilmot
+// Last update Fri Jun 24 19:45:46 2016 guillaume wilmot
 //
 
 #ifndef TEXTUREMANAGER_HPP_
@@ -33,6 +33,7 @@ public:
   int			init(int);
   void			setRenderer(Renderer *r)		{_r = r;}
   void			destroy();
+  int			addRock(const std::string &);
   int			add(const std::string &, const std::string &, float = 0, float = 0, int = 0, bool = false);
   int			add(const std::string &, SDL_Surface *);
   int			update();
@@ -42,6 +43,7 @@ public:
 
   std::vector<surface>	&getV(const std::string &);
   surface		&get(const std::string &, int = -1);
+  surface		&getRock(int);
   surface		&operator[](const std::string &);
 
 private:
@@ -49,6 +51,7 @@ private:
   TextureManager	&operator=(const TextureManager &)	{return (*this);}
 
   std::map<std::string, std::vector<surface> >			_map;
+  std::vector<surface>						_rocks;
   int								_scale;
   Renderer							*_r;
   CharacterManager						_cmgr;

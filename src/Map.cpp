@@ -5,18 +5,18 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:22:12 2016 guillaume wilmot
-// Last update Fri Jun 24 00:39:05 2016 guillaume wilmot
+// Last update Fri Jun 24 16:28:23 2016 guillaume wilmot
 //
 
 #include "Map.hpp"
 
 Map::Map() {}
 
-void		Map::render(ZBuffer &z) const
+void		Map::render(ZBuffer &z, TextureManager &tmgr) const
 {
   for (unsigned int i = 0; i < _h; i++)
     for (unsigned int j = 0; j < _w; j++)
-      _map[i][j].get()->render(z);
+      _map[i][j].get()->render(z, tmgr);
 }
 
 void		Map::init()
@@ -27,8 +27,8 @@ void		Map::init()
   for (unsigned int i = 0; i < _h; i++)
     _map[i] = std::vector<ScopedPtr<Tile> >(_w);
   for (unsigned int i = 0; i < _h; i++)
-    for (unsigned int j = 0; j < _h; j++)
-      _map[i][j].set(new Tile(i, j));
+    for (unsigned int j = 0; j < _w; j++)
+      _map[i][j].set(new Tile(i, j, _w));
 }
 
 void		Map::setRocks(unsigned int x, unsigned int y, int *rocks)
@@ -68,5 +68,5 @@ void		Map::create(unsigned int x, unsigned int y)
   if (x >= _w || y >= _h)
     return ;
   if (!_map[y][x].get())
-    _map[y][x].set(new Tile(x, y));
+    _map[y][x].set(new Tile(x, y, _w));
 }

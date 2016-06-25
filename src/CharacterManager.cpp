@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 15:10:24 2016 guillaume wilmot
-// Last update Wed Jun 22 12:32:54 2016 guillaume wilmot
+// Last update Sat Jun 25 15:28:47 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -42,7 +42,7 @@ int			CharacterManager::getHeight(unsigned int lvl, unsigned int anim) const
 				   {4, 4, 4}, {4, 4, 4}};
 
   if (lvl >= _n || anim >= _a)
-    return (0);
+    return (1);
   return (i[lvl][anim]);
 }
 
@@ -54,7 +54,7 @@ int			CharacterManager::getWidth(unsigned int lvl, unsigned int anim) const
 				   {10, 10, 15}, {10, 10, 15}};
 
   if (lvl >= _n || anim >= _a)
-    return (0);
+    return (1);
   return (i[lvl][anim]);
 }
 

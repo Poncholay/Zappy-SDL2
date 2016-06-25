@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 13 16:47:59 2016 guillaume wilmot
-// Last update Sun Jun 19 23:10:58 2016 guillaume wilmot
+// Last update Sat Jun 25 21:35:15 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -71,7 +71,7 @@ void		ZBuffer::add(TextureManager::surface &t, SDL_Rect *in, SDL_Rect *out, int 
 
 SDL_Surface	*ZBuffer::renderToSurface()
 {
-  std::sort(_buffer.begin(), _buffer.end(), ZBuffer::sort);
+  std::sort(_buffer.begin(), _buffer.end(), sort);
   for (unsigned int i = 0; i < _buffer.size(); i++)
     if (_buffer[i].surface.surface)
       SDL_BlitSurface(_buffer[i].surface.surface, &_buffer[i].in, _surface, &_buffer[i].out);
@@ -81,14 +81,14 @@ SDL_Surface	*ZBuffer::renderToSurface()
 
 void		ZBuffer::render()
 {
-  std::sort(_buffer.begin(), _buffer.end(), ZBuffer::sort);
+  std::sort(_buffer.begin(), _buffer.end(), sort);
   for (unsigned int i = 0; i < _buffer.size(); i++)
     if (_buffer[i].surface.texture)
       SDL_RenderCopy(_renderer->get(), _buffer[i].surface.texture, &_buffer[i].in, &_buffer[i].out);
   _buffer.clear();
 }
 
-bool		ZBuffer::sort(ZBuffer::buff a, ZBuffer::buff b)
+bool		sort(ZBuffer::buff a, ZBuffer::buff b)
 {
   return (a.layer < b.layer || (a.out.y + a.out.h < b.out.y + b.out.h && a.layer <= b.layer));
 }

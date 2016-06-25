@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 13 15:28:28 2016 guillaume wilmot
-// Last update Sun Jun 19 16:23:36 2016 guillaume wilmot
+// Last update Sat Jun 25 21:31:55 2016 guillaume wilmot
 //
 
 #ifndef ZBUFFER_HPP_
@@ -37,7 +37,6 @@ public:
 
   SDL_Surface			*getSurface()	const	{return (_surface);}
   std::vector<buff>		getBuffer()	const	{return (_buffer);}
-  static bool			sort(buff, buff);
 
   void				incX(int t)		{_x += t;}
   void				incY(int t)		{_y += t;}
@@ -51,5 +50,7 @@ private:
   int			_x;
   int			_y;
 };
+
+inline bool			sort(ZBuffer::buff, ZBuffer::buff);
 
 #endif /* !ZBUFFER_HPP_ */

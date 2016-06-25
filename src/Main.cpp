@@ -5,7 +5,7 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Thu Jun 23 23:17:59 2016 guillaume wilmot
+// Last update Fri Jun 24 21:24:30 2016 guillaume wilmot
 */
 
 #include <iostream>
@@ -63,7 +63,8 @@ void			create(bool &stop, bool &start)
 	    }
 	  else if (std::cin.eof())
 	    {
-	      stop = true;
+	      if (isatty(0))
+		stop = true;
 	      return ;
 	    }
 	}

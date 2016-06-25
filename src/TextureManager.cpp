@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Wed Jun 22 22:34:43 2016 guillaume wilmot
+// Last update Sat Jun 25 22:28:05 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -34,19 +34,24 @@ int		TextureManager::init(int scale)
   if (scale != _scale && _scale != -1)
     destroy();
   _scale = scale;
-  if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1, true))
+  if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1, true) ||
+      -1 == add("torches", "./assets/textures/torches.png") ||
+      -1 == add("flag", "./assets/textures/flags/flags.png"))
     return (-1);
   for (unsigned int i = 1; i < 5; i++)
-    if (-1 == add("tree", "./assets/textures/tree" + std::to_string(i) + ".png", scale, scale, 2))
+    if (-1 == add("tree", "./assets/textures/trees/tree" + std::to_string(i) + ".png", scale, scale, 2))
       return (-1);
   for (unsigned int i = 1; i < 6; i++)
-    if (-1 == add("bush", "./assets/textures/weed" + std::to_string(i) + ".png", scale/2, scale/2, 1))
+    if (-1 == add("bush", "./assets/textures/bushs/weed" + std::to_string(i) + ".png", scale/2, scale/2, 1))
       return (-1);
   for (unsigned int i = 1; i < 7; i++)
-    if (-1 == add("bush", "./assets/textures/bush" + std::to_string(i) + ".png", scale, scale, 1))
+    if (-1 == add("bush", "./assets/textures/bushs/bush" + std::to_string(i) + ".png", scale, scale, 1))
       return (-1);
   for (unsigned int i = 2; i < 5; i++)
-    if (-1 == add("vine", "./assets/textures/vine" + std::to_string(i) + ".png", scale, scale, 2))
+    if (-1 == add("vine", "./assets/textures/vines/vine" + std::to_string(i) + ".png", scale, scale, 2))
+      return (-1);
+  for (unsigned int i = 1; i < 8; i++)
+    if (-1 == addRock("./assets/textures/rocks/rock" + std::to_string(i) + ".png"))
       return (-1);
   return (0);
 }
@@ -69,10 +74,29 @@ SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale,
   if (!(ret = zoomSurface(s, x2, y2, 0)))
     return (NULL);
   if (update)
-    Scale::get().set(x2, y2);
+    Scale::get().set(x2, y2, ret->w, ret->h);
   SDL_FreeSurface(s);
   return (ret);
 }
+
+int		TextureManager::addRock(const std::string &name)
+{
+  SDL_Surface	*surf;
+  surface	su;
+
+  memset(&su, 0, sizeof(su));
+  if (!(surf = IMG_Load(name.c_str())))
+    {
+      std::cerr << "Could not load " << name << std::endl;
+      return (-1);
+    }
+  su.surface = surf;
+  if (_r)
+    su.texture = SDL_CreateTextureFromSurface(_r->get(), surf);
+  _rocks.push_back(su);
+  return (0);
+}
+
 
 int		TextureManager::add(const std::string &key, const std::string &name, float x, float y, int scale, bool update)
 {
@@ -107,6 +131,9 @@ int		TextureManager::update()
     for (unsigned int i = 0; i < (*it).second.size(); i++)
       if (!_r || !((*it).second[i].texture = SDL_CreateTextureFromSurface(_r->get(), (*it).second[i].surface)))
 	return (-1);
+  for (auto it = _rocks.begin(); it != _rocks.end(); it++)
+    if (!_r || !((*it).texture = SDL_CreateTextureFromSurface(_r->get(), (*it).surface)))
+      return (-1);
   _cmgr.init(_r);
   return (0);
 }
@@ -121,6 +148,11 @@ TextureManager::surface		&TextureManager::get(const std::string &key, int i)
 TextureManager::surface		&TextureManager::operator[](const std::string &key)
 {
   return (get(key));
+}
+
+TextureManager::surface		&TextureManager::getRock(int i)
+{
+  return (_rocks[i]);
 }
 
 std::vector<TextureManager::surface>	&TextureManager::getV(const std::string &key)

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:23:17 2016 guillaume wilmot
-// Last update Thu Jun 23 22:23:24 2016 guillaume wilmot
+// Last update Sat Jun 25 22:54:31 2016 guillaume wilmot
 //
 
 #ifndef DISPLAYER_HPP_
@@ -19,6 +19,7 @@
 # include "TextureManager.hpp"
 # include "Map.hpp"
 # include "Charset.hh"
+# include "Egg.hpp"
 
 class		Displayer {
 public:
@@ -43,6 +44,7 @@ private:
   Displayer(const Displayer &) : _win("Zappy"), _zbuff(WINX, WINY)	{}
   Displayer		&operator=(const Displayer &)			{return (*this);}
 
+  Direction		mapDir(int);
   //PROTOCOL
   int			msz(std::istringstream &);
   int			bct(std::istringstream &);
@@ -76,12 +78,11 @@ private:
   TextureManager	_tmgrChar;
   Map			_map;
 
-  int			_time;
   bool			_end;
 
   std::vector<std::string>						_teams;
   std::map<int, Charset *>						_players;
-  // std::map<int, Eggs *>							_eggs;
+  std::map<int, Egg *>							_eggs;
   std::map<std::string, int (Displayer::*)(std::istringstream &)>	_ptrMtd;
 };
 

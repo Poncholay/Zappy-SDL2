@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 17:32:15 2016 guillaume wilmot
-// Last update Wed Jun 22 22:49:16 2016 guillaume wilmot
+// Last update Sat Jun 25 22:42:49 2016 guillaume wilmot
 //
 
 #ifndef CHARSET_HH_
@@ -17,10 +17,10 @@
 
 enum		Direction
   {
-    UP = 0,
-    RIGHT,
+    LEFT = 1,
     DOWN,
-    LEFT
+    RIGHT,
+    UP,
   };
 
 enum		Anim
@@ -35,7 +35,7 @@ public:
   Charset();
   ~Charset();
 
-  void			render(ZBuffer &, CharacterManager &);
+  int			render(ZBuffer &, CharacterManager &, int);
 
   Direction		getDirection() const;
   Anim			getAnim() const;
@@ -49,6 +49,8 @@ public:
   void			setSpeed(int);
   void			setPosX(int);
   void			setPosY(int);
+  void			setOldPosX(int);
+  void			setOldPosY(int);
   void			setFrame(int);
   void			setTeam(const std::string &);
   void			setInv(int *);
@@ -69,9 +71,16 @@ private:
   int           _h;
   int		_posX;
   int		_posY;
+  int		_oldPosX;
+  int		_oldPosY;
   int           _frame;
+
+  bool		_move;
+  int		_movement;
+  int		_time;
   int		_speed;
   int		_timer;
+
   int		_inv[7];
 
   std::string	_team;

@@ -5,13 +5,14 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Thu Jun 23 22:52:29 2016 guillaume wilmot
+// Last update Sat Jun 25 23:13:54 2016 guillaume wilmot
 //
 
 #include <algorithm>
 #include <sstream>
 #include <string>
 #include <unistd.h>
+#include "Time.hpp"
 #include "ScopedLock.hpp"
 #include "FpsManager.hpp"
 #include "Displayer.hpp"
@@ -43,7 +44,6 @@ Displayer::Displayer() : _win("Zappy", 0, 0), _zbuff(WINX, WINY)
   _ptrMtd["smg"] = &Displayer::smg;
   _ptrMtd["suc"] = &Displayer::suc;
   _ptrMtd["sbp"] = &Displayer::sbp;
-  _time = 0;
   _end = false;
 }
 
@@ -70,23 +70,18 @@ int			Displayer::start(bool &stop, bool &start)
 
   _win.setTmgr(&_tmgr);
   _win.setZbuff(&_zbuff);
-  while ((_win.getHeight() == 0 || _win.getWidth() == 0) && !stop)
+  while (_mutex.lock(), (_win.getHeight() == 0 || _win.getWidth() == 0) && !stop)
     {
       start = true;
+      _mutex.unlock();
       usleep(100000);
     }
+  _mutex.unlock();
   _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
-
-  /**/
-  Charset            C;
-  C.setPosY(300);
-  C.setPosX(300);
-  /**/
 
   while (!stop)
     {
       fpsMgr.apply();
-
       _mutex.lock();
       while (SDL_PollEvent(&ev))
 	{
@@ -102,13 +97,23 @@ int			Displayer::start(bool &stop, bool &start)
               ev.type == SDL_MOUSEWHEEL)
 	    _win.checkEvent(ev);
         }
-
       dims = _win.getDimensions();
       _win.getRenderer().renderClear();
       _win.getRenderer().renderCopy(_win.getBackground(), dims, dims);
-      /**/
-      C.render(_win.getZBuffer(), _tmgr.getCmgr());
-      /**/
+
+      for (auto it = _players.begin(); it != _players.end();)
+	if ((*it).second &&
+	    (*it).second->render(_win.getZBuffer(), _tmgr.getCmgr(), _map.getWidth()) == -1)
+	  {
+	    delete (*it).second;
+	    it = _players.erase(it);
+	  }
+	else
+	  it++;
+      for (auto it = _eggs.begin(); it != _eggs.end(); it++)
+	if ((*it).second)
+	  (*it).second->render(_tmgr["flag"], _win.getZBuffer());
+      _map.render(_zbuff, _tmgr);
       _win.createForeground();
 
       Renderer		&r = _win.getRenderer();
@@ -134,6 +139,18 @@ int			Displayer::execute(const std::string &arg)
   return (-1);
 }
 
+Direction		Displayer::mapDir(int dir)
+{
+  static const Direction m[5] = {UP, UP, RIGHT, DOWN, LEFT};
+
+  std::cout << dir << std::endl;
+  dir %= 5;
+  dir = !dir ? 1 : dir;
+  std::cout << dir << std::endl;
+  std::cout << m[dir] << std::endl;
+  return (m[dir]);
+}
+
 int			Displayer::msz(std::istringstream &arg)
 {
   int			x, y;
@@ -145,10 +162,15 @@ int			Displayer::msz(std::istringstream &arg)
     return (std::cerr << "msz : x and y must be <= 100 && >= 1" << std::endl, -1);
   _win.setMapWidth(x);
   _win.setMapHeight(y);
+  if (_win.create())
+    {
+      _win.setMapWidth(0);
+      _win.setMapHeight(0);
+      return (-1);
+    }
   _map.setWidth(x);
   _map.setHeight(y);
   _map.init();
-  _win.create();
   return (0);
 }
 
@@ -182,7 +204,7 @@ int			Displayer::tna(std::istringstream &arg)
 int			Displayer::pnw(std::istringstream &arg)
 {
   int			id, x, y, lvl;
-  char			dir;
+  int			dir;
   std::string		team;
   std::string		err;
 
@@ -194,16 +216,19 @@ int			Displayer::pnw(std::istringstream &arg)
   _players[id] = new Charset;
   _players[id]->setPosX(x);
   _players[id]->setPosY(y);
-  _players[id]->setLvl(lvl);
+  _players[id]->setOldPosX(x);
+  _players[id]->setOldPosY(y);
+  _players[id]->setLvl(lvl - 1 < 0 ? 0 : lvl - 1);
   _players[id]->setTeam(team);
-  _players[id]->setDirection(static_cast<Direction>(dir % 4));
+  _players[id]->setDirection(mapDir(dir));
+  _players[id]->setAnim(STAND);
   return (0);
 }
 
 int			Displayer::ppo(std::istringstream &arg)
 {
   int			id, x, y;
-  char			dir;
+  int			dir;
   std::string		err;
 
   if (!(arg >> id) || !(arg >> x) || !(arg >> y) || !(arg >> dir) || (arg >> err))
@@ -212,7 +237,7 @@ int			Displayer::ppo(std::istringstream &arg)
     return (std::cerr << "No Player" << id << std::endl, -1);
   _players[id]->setPosX(x);
   _players[id]->setPosY(y);
-  _players[id]->setDirection(static_cast<Direction>(dir % 4));
+  _players[id]->setDirection(mapDir(dir));
   return (0);
 }
 
@@ -314,11 +339,9 @@ int			Displayer::enw(std::istringstream &arg)
 
   if (!(arg >> ide) || !(arg >> idp) || !(arg >> x) || !(arg >> y) || (arg >> err))
     return (std::cerr << "Received bad command : enw" << std::endl, -1);
-  // if (!_eggs[ide])
-  //   return (std::cerr << "Egg " << id << "Already exists" << std::endl, -1);
   if (!_players[idp])
     return (std::cerr << "No Player" << idp << std::endl, -1);
-  // _eggs[ide] = new Egg(x, y, idp);
+  _eggs[ide] = new Egg(x, y, idp, _map.getWidth());
   return (0);
 }
 
@@ -329,9 +352,10 @@ int			Displayer::eht(std::istringstream &arg)
 
   if (!(arg >> ide) || (arg >> err))
     return (std::cerr << "Received bad command : eht" << std::endl, -1);
-  // if (!_eggs[ide])
-  //   return (std::cerr << "No Egg " << id << std::endl, -1);
-  // _eggs[ide]->setOk();
+  if (!_eggs[ide])
+    return (std::cerr << "No Egg " << ide << std::endl, -1);
+  delete _eggs[ide];
+  _eggs[ide] = NULL;
   return (0);
 }
 
@@ -342,10 +366,10 @@ int			Displayer::ebo(std::istringstream &arg)
 
   if (!(arg >> ide) || (arg >> err))
     return (std::cerr << "Received bad command : ebo" << std::endl, -1);
-  // if (!_eggs[ide])
-  //   return (std::cerr << "No Egg " << id << std::endl, -1);
-  // delete _eggs[ide];
-  // _eggs[ide] = NULL;
+  if (!_eggs[ide])
+    return (std::cerr << "No Egg " << ide << std::endl, -1);
+  delete _eggs[ide];
+  _eggs[ide] = NULL;
   return (0);
 }
 
@@ -370,7 +394,7 @@ int			Displayer::sgt(std::istringstream &arg)
 
   if (!(arg >> t) || (arg >> err))
     return (std::cerr << "Received bad command : sgt" << std::endl, -1);
-  _time = t;
+  Time::get() << t;
   return (0);
 }
 

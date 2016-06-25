@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 13:06:52 2016 guillaume wilmot
-// Last update Wed Jun 22 12:33:05 2016 guillaume wilmot
+// Last update Sat Jun 25 15:58:35 2016 guillaume wilmot
 //
 
 #ifndef CHARSETMANAGER_HPP_
@@ -29,7 +29,7 @@ public:
   int				getHeight(unsigned int, unsigned int) const;
   int				getWidth(unsigned int, unsigned int) const;
 
-  std::vector<SDL_Texture *>	&operator[](int i)	{return (_vector[i]);}
+  std::vector<SDL_Texture *>	&operator[](int i)	{return (_vector[i % _n]);}
 
 private:
   CharacterManager(const CharacterManager &)		{}
