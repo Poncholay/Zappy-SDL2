@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 17:32:15 2016 guillaume wilmot
-// Last update Sat Jun 25 22:42:49 2016 guillaume wilmot
+// Last update Sun Jun 26 09:08:57 2016 guillaume wilmot
 //
 
 #ifndef CHARSET_HH_
@@ -18,9 +18,9 @@
 enum		Direction
   {
     LEFT = 1,
-    DOWN,
-    RIGHT,
     UP,
+    RIGHT,
+    DOWN,
   };
 
 enum		Anim
@@ -35,7 +35,7 @@ public:
   Charset();
   ~Charset();
 
-  int			render(ZBuffer &, CharacterManager &, int);
+  int			render(ZBuffer &, TextureManager &, int);
 
   Direction		getDirection() const;
   Anim			getAnim() const;
@@ -43,6 +43,7 @@ public:
   int			getFrame() const;
   int			getPosX() const;
   int			getPosY() const;
+  void			setBroadcast();
   void			setLvl(int);
   void			setDirection(Direction);
   void			setAnim(Anim);
@@ -74,6 +75,9 @@ private:
   int		_oldPosX;
   int		_oldPosY;
   int           _frame;
+
+  bool		_broadcast;
+  int		_broadcastFrame;
 
   bool		_move;
   int		_movement;

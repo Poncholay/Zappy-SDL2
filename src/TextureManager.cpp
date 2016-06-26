@@ -5,10 +5,11 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 19:32:55 2016 guillaume wilmot
-// Last update Sun Jun 26 01:51:35 2016 guillaume wilmot
+// Last update Sun Jun 26 09:16:47 2016 guillaume wilmot
 //
 
 #include <iostream>
+#include <fstream>
 #include "SDL2_rotozoom.h"
 #include "SDL_image.h"
 #include "Scale.hpp"
@@ -36,7 +37,8 @@ int		TextureManager::init(int scale)
   _scale = scale;
   if (-1 == add("cube", "./assets/textures/cube.png", scale, scale, 1, true) ||
       -1 == add("torches", "./assets/textures/torches.png") ||
-      -1 == add("flag", "./assets/textures/flags/flags.png"))
+      -1 == add("flag", "./assets/textures/flags.png") ||
+      -1 == add("broadcast", "./assets/textures/broadcast.png"))
     return (-1);
   for (unsigned int i = 1; i < 5; i++)
     if (-1 == add("tree", "./assets/textures/trees/tree" + std::to_string(i) + ".png", scale, scale, 2))
@@ -71,7 +73,15 @@ SDL_Surface	*TextureManager::resize(SDL_Surface *s, float x, float y, int scale,
       y2 = 1.0 * y / s->h > 2 ? 2 : 1.0 * y / s->h;
       x2 = 1.0 * x / s->w > 2 ? 2 : 1.0 * x / s->w;
     }
-  if (!(ret = zoomSurface(s, x2, y2, 0)))
+
+  std::ifstream ifs (".conf", std::ifstream::in);
+  char		c[5] = {0, 0, 0, 0, 0};
+  bool		aa = false;
+  ifs.getline(c, 5);
+  if (!strncmp(c, "AA=", 3))
+    aa = c[3] == '1' ? true : false;
+
+  if (!(ret = zoomSurface(s, x2, y2, aa)))
     return (NULL);
   if (update)
     Scale::get().set(x2, y2, ret->w, ret->h);

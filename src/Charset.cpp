@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Sat Jun 25 23:01:45 2016 guillaume wilmot
+// Last update Sun Jun 26 09:17:31 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -29,9 +29,10 @@ Charset::Charset()
   _anim = WALK;
   _frame = 0;
   _move = 0;
-  _speed = 1;
+  _speed = 2;
   _timer = 0;
   _dead = false;
+  _broadcast = false;
   _movement = 0;
 }
 
@@ -40,13 +41,14 @@ Charset::~Charset() {}
 
 Charset		&Charset::operator=(const Charset &) {return (*this);}
 
-int		Charset::render(ZBuffer &zbuff, CharacterManager &mgr, int width)
+int		Charset::render(ZBuffer &zbuff, TextureManager &tmgr, int width)
 {
   SDL_Rect	src;
   SDL_Rect	pos;
   TextureManager::surface s;
   float		percentX = Scale::get()._x * 1.5;
   float		percentY = Scale::get()._y * 1.5;
+  CharacterManager	&mgr = tmgr.getCmgr();
 
   if (!(_texture = mgr[_lvl][_anim % 3]))
     return (-1);
@@ -99,6 +101,27 @@ int		Charset::render(ZBuffer &zbuff, CharacterManager &mgr, int width)
 	    _anim = STAND;
 	  }
     }
+
+  if (_broadcast)
+    {
+      TextureManager::surface	&su = tmgr["broadcast"];
+
+      if (!su.surface || !su.texture)
+	return (0);
+      src.x = 0;
+      src.y = 0;
+      src.w = su.surface->w;
+      src.h = su.surface->h;
+
+      pos.x = (_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4 +
+	((1.0 * pos.w) / 2);
+      pos.y = (width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4 - ((1.0 * pos.h) / 2) - su.surface->h / 2;
+      pos.w = su.surface->w * Scale::get()._x;
+      pos.h = su.surface->h * Scale::get()._y;
+      zbuff.add(su, &src, &pos, 3);
+      if (_broadcastFrame++ == 60)
+	_broadcast = 0;
+    }
   return (0);
 }
 
@@ -116,13 +139,14 @@ void		Charset::setFrame(int s)		{_frame = s;}
 void		Charset::setTeam(const std::string &s)	{_team = s;}
 void		Charset::setInv(int *s)			{for (int i = 0; i < 7; i++) _inv[i] = s[i];}
 void		Charset::kill()				{_dead = true; _anim = DIE; _frame = 0;}
+void		Charset::setBroadcast()			{_broadcast = true; _broadcastFrame = 0;}
 
 void		Charset::setOldPosX(int s)		{_oldPosX = s;}
 void		Charset::setOldPosY(int s)		{_oldPosY = s;}
 
 void		Charset::setPosX(int s)
 {
-  if (s < 0)
+  if (s < 0 || s == _posX)
     return ;
   _oldPosX = _posX;
   _posX = s;
@@ -136,7 +160,7 @@ void		Charset::setPosX(int s)
 
 void		Charset::setPosY(int s)
 {
-  if (s < 0)
+  if (s < 0 || s == _posY)
     return ;
   _oldPosY = _posY;
   _posY = s;

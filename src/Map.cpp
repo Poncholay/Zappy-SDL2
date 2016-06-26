@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:22:12 2016 guillaume wilmot
-// Last update Fri Jun 24 16:28:23 2016 guillaume wilmot
+// Last update Sun Jun 26 04:43:40 2016 guillaume wilmot
 //
 
 #include "Map.hpp"
@@ -28,7 +28,7 @@ void		Map::init()
     _map[i] = std::vector<ScopedPtr<Tile> >(_w);
   for (unsigned int i = 0; i < _h; i++)
     for (unsigned int j = 0; j < _w; j++)
-      _map[i][j].set(new Tile(i, j, _w));
+      _map[i][j].set(new Tile(j, i, _w));
 }
 
 void		Map::setRocks(unsigned int x, unsigned int y, int *rocks)

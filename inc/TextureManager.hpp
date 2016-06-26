@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 12 18:53:10 2016 guillaume wilmot
-// Last update Fri Jun 24 19:45:46 2016 guillaume wilmot
+// Last update Sun Jun 26 08:20:59 2016 guillaume wilmot
 //
 
 #ifndef TEXTUREMANAGER_HPP_

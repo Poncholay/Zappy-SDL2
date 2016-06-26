@@ -5,93 +5,64 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 15:44:09 2016 guillaume wilmot
-// Last update Sun Jun 19 15:11:14 2016 guillaume wilmot
+// Last update Sun Jun 26 09:01:05 2016 guillaume wilmot
 //
 
+#include <algorithm>
+#include <unistd.h>
 #include "ZClient.hh"
 
 ZClient::ZClient(const char *host, int port)
 {
   _port = port;
   _host = host;
-  _x = 0;
-  _y = 0;
 }
 
 ZClient::~ZClient() {}
 
-void		ZClient::writeServer(const char *buffer)
+int		ZClient::write(const std::string &buff)
 {
-  std::cout << "## [" << buffer << "] sent ##" << std::endl;
-  if (sendto(_sock, buffer, strlen(buffer), 0, (sockaddr *) &_sin, sizeof _sin) < 0)
-    {
-      perror("sendto()");
-      exit(errno);
-    }
+  if (::write(_sock, buff.c_str(), buff.length()) == -1)
+    return (-1);
+  return (0);
 }
 
-int		ZClient::readServer()
+int		ZClient::read()
 {
   int		n = 0;
   unsigned int	sinsize = sizeof _sin;
 
-  if ((n = recvfrom(_sock, _buffer, 4096 - 1, 0, (sockaddr *) &_sin, &sinsize)) < 0)
-    {
-      perror("recvfrom()");
-      exit(errno);
-    }
+  if ((n = recvfrom(_sock, _buffer, 4096 - 1, 0, (sockaddr *)&_sin, &sinsize)) < 0)
+    return (-1);
   _buffer[n] = 0;
+  _rest += _buffer;
+  std::cout << _rest << std::endl;
   return (n);
 }
 
-void		ZClient::launch()
+int		ZClient::getCmd(std::string &cmd)
 {
-  std::cout << "Client listening..." << std::endl;
-  while (1)
-    {
-      _timeout.tv_sec = 1;
-      _timeout.tv_usec = 0;
-      FD_ZERO(&_rdfs);
-      FD_SET(_sock, &_rdfs);
-      if (select(_sock + 1, &_rdfs, NULL, NULL, &_timeout) == -1)
-	{
-	  perror("select()");
-	  exit(errno);
-	}
-      if (FD_ISSET(_sock, &_rdfs))
-	{
-	  if (readServer() == 0)
-	    {
-	      printf("Server disconnected !\n");
-	      break;
-	    }
-	  puts(_buffer);
-	}
-    }
+  if (_rest.find("\n") == std::string::npos)
+    return (-1);
+  cmd = _rest.substr(0, _rest.find("\n"));
+  _rest = _rest.substr(_rest.find("\n") + 1);
+  cmd.erase(std::remove(cmd.begin(), cmd.end(), '\r'), cmd.end());
+  return (0);
 }
 
-void	ZClient::init()
+int		ZClient::init()
 {
   _sock = socket(AF_INET, SOCK_STREAM, 0);
-  if (_sock == -1)
-    {
-      perror("socket()");
-      exit(errno);
-    }
-  if ((_hostinfo = gethostbyname(_host)) == NULL)
-    {
-      fprintf (stderr, "Unknown host %s.\n", _host);
-      exit(EXIT_FAILURE);
-    }
+  if (_sock == -1 || (_hostinfo = gethostbyname(_host)) == NULL)
+    return (std::cerr << "Could not init socket" << std::endl, -1);
   _sin.sin_addr = *(in_addr *) _hostinfo->h_addr;
   _sin.sin_port = htons(_port);
   _sin.sin_family = AF_INET;
-  _timeout.tv_sec = 1;
-  _timeout.tv_usec = 0;
   if ((connect(_sock, (struct sockaddr *) &_sin, sizeof(struct sockaddr))) == -1)
-    exit(errno);
-  std::cout << "Client connected" << std::endl;
+    return (std::cerr << "Could not connect" << std::endl, -1);
+  return (0);
 }
 
 std::string	ZClient::getIp()	const {return (std::string(_host));}
 int		ZClient::getPort()	const {return (_port);}
+int		ZClient::getFd()	const {return (_sock);}

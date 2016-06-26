@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Sat Jun 25 23:13:54 2016 guillaume wilmot
+// Last update Sun Jun 26 09:02:16 2016 guillaume wilmot
 //
 
 #include <algorithm>
@@ -103,7 +103,7 @@ int			Displayer::start(bool &stop, bool &start)
 
       for (auto it = _players.begin(); it != _players.end();)
 	if ((*it).second &&
-	    (*it).second->render(_win.getZBuffer(), _tmgr.getCmgr(), _map.getWidth()) == -1)
+	    (*it).second->render(_win.getZBuffer(), _tmgr, _map.getWidth()) == -1)
 	  {
 	    delete (*it).second;
 	    it = _players.erase(it);
@@ -143,11 +143,8 @@ Direction		Displayer::mapDir(int dir)
 {
   static const Direction m[5] = {UP, UP, RIGHT, DOWN, LEFT};
 
-  std::cout << dir << std::endl;
   dir %= 5;
   dir = !dir ? 1 : dir;
-  std::cout << dir << std::endl;
-  std::cout << m[dir] << std::endl;
   return (m[dir]);
 }
 
@@ -250,7 +247,7 @@ int			Displayer::plv(std::istringstream &arg)
     return (std::cerr << "Received bad command : pvl" << std::endl, -1);
   if (!_players[id])
     return (std::cerr << "No Player" << id << std::endl, -1);
-  _players[id]->setLvl(lvl);
+  _players[id]->setLvl((lvl < 1 ? 1 : lvl) - 1);
   return (0);
 }
 
@@ -380,10 +377,10 @@ int			Displayer::edi(std::istringstream &arg)
 
   if (!(arg >> ide) || (arg >> err))
     return (std::cerr << "Received bad command : edi" << std::endl, -1);
-  // if (!_eggs[ide])
-  //   return (std::cerr << "No Egg " << id << std::endl, -1);
-  // delete _eggs[ide];
-  // _eggs[ide] = NULL;
+  if (!_eggs[ide])
+    return (std::cerr << "No Egg " << ide << std::endl, -1);
+  delete _eggs[ide];
+  _eggs[ide] = NULL;
   return (0);
 }
 
@@ -414,8 +411,21 @@ int			Displayer::seg(std::istringstream &arg)
   return (0);
 }
 
+int			Displayer::pbc(std::istringstream &arg)
+{
+  int			id;
+  std::string		msg;
+  std::string		err;
+
+  if (!(arg >> id) || !(arg >> msg) || (arg >> err))
+    return (std::cerr << "Received bad command : pbc" << std::endl, -1);
+  if (!_players[id])
+    return (std::cerr << "No player " << id << std::endl, -1);
+  _players[id]->setBroadcast();
+  return (0);
+}
+
 int			Displayer::pex(std::istringstream &) {return (0);}
-int			Displayer::pbc(std::istringstream &) {return (0);}
 int			Displayer::pfk(std::istringstream &) {return (0);}
 int			Displayer::smg(std::istringstream &) {return (0);}
 int			Displayer::suc(std::istringstream &) {return (0);}

@@ -5,7 +5,7 @@
 // Login   <empoci_k@epitech.net>
 //
 // Started on  Wed Apr 27 15:21:29 2016 Kévin Empociello
-// Last update Sun Jun 19 15:10:17 2016 guillaume wilmot
+// Last update Sun Jun 26 04:22:03 2016 guillaume wilmot
 //
 
 #ifndef ZCLIENT_H
@@ -26,24 +26,23 @@
 class ZClient {
 private:
   struct hostent	*_hostinfo;
-  struct timeval	_timeout;
   std::string		_username;
   sockaddr_in		_sin;
   fd_set		_rdfs;
   char			_buffer[4096];
+  std::string		_rest;
   int			_sock;
-  int			_x;
-  int			_y;
   int			_port;
   const char	       	*_host;
 
 public:
-  void			writeServer(const char *);
-  void			launch();
-  void			init();
-  int			readServer();
+  int			write(const std::string &);
+  int			init();
+  int			read();
+  int			getCmd(std::string &);
   std::string		getIp() const;
   int			getPort() const;
+  int			getFd() const;
 
   ZClient(const char *, int);
   ~ZClient();
