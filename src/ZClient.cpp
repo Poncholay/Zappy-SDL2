@@ -5,23 +5,22 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 15:44:09 2016 guillaume wilmot
-// Last update Sun Jun 26 09:01:05 2016 guillaume wilmot
+// Last update Sun Jun 26 18:55:26 2016 guillaume wilmot
 //
 
+#include <iostream>
 #include <algorithm>
 #include <unistd.h>
-#include "ZClient.hh"
+#include "ZClient.hpp"
+#include "ScopedLock.hpp"
 
-ZClient::ZClient(const char *host, int port)
-{
-  _port = port;
-  _host = host;
-}
-
+ZClient::ZClient() {}
 ZClient::~ZClient() {}
 
 int		ZClient::write(const std::string &buff)
 {
+  ScopedLock	lock(_mutex);
+
   if (::write(_sock, buff.c_str(), buff.length()) == -1)
     return (-1);
   return (0);
@@ -29,19 +28,21 @@ int		ZClient::write(const std::string &buff)
 
 int		ZClient::read()
 {
+  ScopedLock	lock(_mutex);
   int		n = 0;
   unsigned int	sinsize = sizeof _sin;
 
-  if ((n = recvfrom(_sock, _buffer, 4096 - 1, 0, (sockaddr *)&_sin, &sinsize)) < 0)
+  if ((n = recvfrom(_sock, _buffer, 4096 - 1, 0, (sockaddr *)&_sin, &sinsize)) <= 0)
     return (-1);
   _buffer[n] = 0;
   _rest += _buffer;
-  std::cout << _rest << std::endl;
   return (n);
 }
 
 int		ZClient::getCmd(std::string &cmd)
 {
+  ScopedLock	lock(_mutex);
+
   if (_rest.find("\n") == std::string::npos)
     return (-1);
   cmd = _rest.substr(0, _rest.find("\n"));
@@ -52,8 +53,10 @@ int		ZClient::getCmd(std::string &cmd)
 
 int		ZClient::init()
 {
+  ScopedLock	lock(_mutex);
+
   _sock = socket(AF_INET, SOCK_STREAM, 0);
-  if (_sock == -1 || (_hostinfo = gethostbyname(_host)) == NULL)
+  if (_sock == -1 || (_hostinfo = gethostbyname(_host.c_str())) == NULL)
     return (std::cerr << "Could not init socket" << std::endl, -1);
   _sin.sin_addr = *(in_addr *) _hostinfo->h_addr;
   _sin.sin_port = htons(_port);
@@ -63,6 +66,6 @@ int		ZClient::init()
   return (0);
 }
 
-std::string	ZClient::getIp()	const {return (std::string(_host));}
-int		ZClient::getPort()	const {return (_port);}
-int		ZClient::getFd()	const {return (_sock);}
+std::string	ZClient::getIp()	{ScopedLock	lock(_mutex); return (std::string(_host));}
+int		ZClient::getPort()	{ScopedLock	lock(_mutex); return (_port);}
+int		ZClient::getFd()	{ScopedLock	lock(_mutex); return (_sock);}

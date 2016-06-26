@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Mon Jun 20 15:10:24 2016 guillaume wilmot
-// Last update Sat Jun 25 15:28:47 2016 guillaume wilmot
+// Last update Sun Jun 26 20:30:48 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -56,6 +56,30 @@ int			CharacterManager::getWidth(unsigned int lvl, unsigned int anim) const
   if (lvl >= _n || anim >= _a)
     return (1);
   return (i[lvl][anim]);
+}
+
+SDL_Texture		*CharacterManager::getFace(unsigned int i) const
+{
+  return (_faces[i]);
+}
+
+int			CharacterManager::initFaces(Renderer *r)
+{
+  SDL_Surface		*tmpS;
+  SDL_Texture		*tmpT;
+  std::string		t;
+
+  for (unsigned int i = 0; i < 8; i++)
+    {
+      t = "./assets/textures/faces/" + std::to_string(i + 1) + ".png";
+      if (!(tmpS = IMG_Load(t.c_str())))
+	return (std::cerr << "Cannot load " << t << std::endl, -1);
+      if (!(tmpT = SDL_CreateTextureFromSurface(r->get(), tmpS)))
+	return (-1);
+      SDL_FreeSurface(tmpS);
+      _faces.push_back(tmpT);
+    }
+  return (0);
 }
 
 int			CharacterManager::init(Renderer *r)

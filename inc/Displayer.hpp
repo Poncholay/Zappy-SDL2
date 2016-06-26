@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:23:17 2016 guillaume wilmot
-// Last update Sat Jun 25 22:54:31 2016 guillaume wilmot
+// Last update Sun Jun 26 17:50:31 2016 guillaume wilmot
 //
 
 #ifndef DISPLAYER_HPP_
@@ -20,6 +20,7 @@
 # include "Map.hpp"
 # include "Charset.hh"
 # include "Egg.hpp"
+# include "Inventory.hpp"
 
 class		Displayer {
 public:
@@ -37,6 +38,8 @@ public:
     return (dis);
   }
 
+  void			drawProps();
+  int			manageEvents(bool &);
   int			start(bool &, bool &);
   int			execute(const std::string &);
 
@@ -73,6 +76,7 @@ private:
 
   Mutex			_mutex;
   ShapedWindow		_win;
+  Inventory		_inventory;
   ZBuffer		_zbuff;
   TextureManager	_tmgr;
   TextureManager	_tmgrChar;

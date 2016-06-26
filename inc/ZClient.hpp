@@ -5,25 +5,35 @@
 // Login   <empoci_k@epitech.net>
 //
 // Started on  Wed Apr 27 15:21:29 2016 Kévin Empociello
-// Last update Sun Jun 26 04:22:03 2016 guillaume wilmot
+// Last update Sun Jun 26 16:22:53 2016 guillaume wilmot
 //
 
 #ifndef ZCLIENT_H
 # define ZCLIENT_H
 
-# include <iostream>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
 # include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
 # include <netdb.h>
 # include <string.h>
-# include <errno.h>
+# include "Mutex.hpp"
 
 class ZClient {
+public:
+  ZClient();
+  ~ZClient();
+
+  static ZClient	&get() {static ZClient c; return (c);}
+
+  int			write(const std::string &);
+  int			init();
+  int			read();
+  int			getCmd(std::string &);
+  std::string		getIp();
+  int			getPort();
+  int			getFd();
+
+  void			setHost(const std::string &h) {_host = h;}
+  void			setPort(int p) {_port = p;}
+
 private:
   struct hostent	*_hostinfo;
   std::string		_username;
@@ -33,19 +43,8 @@ private:
   std::string		_rest;
   int			_sock;
   int			_port;
-  const char	       	*_host;
-
-public:
-  int			write(const std::string &);
-  int			init();
-  int			read();
-  int			getCmd(std::string &);
-  std::string		getIp() const;
-  int			getPort() const;
-  int			getFd() const;
-
-  ZClient(const char *, int);
-  ~ZClient();
+  std::string		_host;
+  Mutex			_mutex;
 };
 
 #endif //ZCLIENT_H

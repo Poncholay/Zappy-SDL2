@@ -5,38 +5,39 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 25 23:47:03 2016 guillaume wilmot
-// Last update Sat Jun 25 23:55:09 2016 guillaume wilmot
+// Last update Sun Jun 26 20:39:45 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include <vector>
-#include <stdlib.h>
+#include <random>
 #include "NameGenerator.hpp"
 
 std::string				NameGenerator::generate()
 {
   static int				i = 0;
   static std::vector<std::string>	logins;
+  static std::default_random_engine	rander(time(NULL));
 
   if (!i)
     {
-      logins.push_back("milcen");
-      logins.push_back("octeau");
-      logins.push_back("cavail");
-      logins.push_back("noboud");
-      logins.push_back("saurs");
-      logins.push_back("combaud");
-      logins.push_back("barriere");
-      logins.push_back("empoci");
-      logins.push_back("arino");
-      logins.push_back("wilmot");
-      logins.push_back("sauzeau");
-      logins.push_back("darrac");
-      logins.push_back("armagnac");
-      logins.push_back("moreel");
-      logins.push_back("dazy");
-      logins.push_back("sbrissa");
-      logins.push_back("voisin");
+      logins.push_back("Milcen");
+      logins.push_back("Octeau");
+      logins.push_back("Cavail");
+      logins.push_back("Noboud");
+      logins.push_back("Saurs");
+      logins.push_back("Combaud");
+      logins.push_back("Barriere");
+      logins.push_back("Empoci");
+      logins.push_back("Arino");
+      logins.push_back("Wilmot");
+      logins.push_back("Sauzeau");
+      logins.push_back("Darrac");
+      logins.push_back("Armagnac");
+      logins.push_back("Moreel");
+      logins.push_back("Dazy");
+      logins.push_back("Sbrissa");
+      logins.push_back("Voisin");
     }
 
   static std::vector<std::string>	names;
@@ -78,5 +79,5 @@ std::string				NameGenerator::generate()
     }
 
   i++;
-  return (logins[rand() % (logins.size() - 1)] + " " + names[rand() % (names.size() - 1)]);
+  return (logins[rander() % (logins.size() - 1)] + " " + names[rander() % (names.size() - 1)]);
 }

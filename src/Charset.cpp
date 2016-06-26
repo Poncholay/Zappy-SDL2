@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Sun Jun 26 10:00:13 2016 guillaume wilmot
+// Last update Sun Jun 26 20:54:44 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -14,9 +14,11 @@
 #include "SDL2/SDL_image.h"
 #include "Scale.hpp"
 #include "Time.hpp"
+#include "NameGenerator.hpp"
 
 Charset::Charset()
 {
+  _name = NameGenerator::generate();
   _texture = NULL;
   _lvl = 0;
   _w = 0;
@@ -34,6 +36,11 @@ Charset::Charset()
   _dead = false;
   _broadcast = false;
   _movement = 0;
+  _pixX = 0;
+  _pixY = 0;
+  _pixH = 0;
+  _pixW = 0;
+  for (int i = 0; i < 7; i++) _inv[i] = 0;
 }
 
 Charset::Charset(const Charset &) {}
@@ -74,26 +81,22 @@ int		Charset::render(ZBuffer &zbuff, TextureManager &tmgr, int width)
   pos.y = (width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4 - ((1.0 * pos.h) / 2);
 
   if (_move)
-    {
-      if (std::fabs(_oldPosX - _posX) > 1.1 || std::fabs(_oldPosY - _posY) > 1.1)
-	{
-	  // pos.x -= (((_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4) -
-	  // 	    ((_posX + _posY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4)) * percent;
-	  // pos.y -= (((width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4) -
-	  // 	    ((width - (_posY + 1) + _posX) * 1.0 * Scale::get()._h / 4)) * percent;
-	}
-      else
-	{
-	  pos.x -= (((_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4) -
-		    ((_posX + _posY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4)) * percent;
-	  pos.y -= (((width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4) -
-		    ((width - (_posY + 1) + _posX) * 1.0 * Scale::get()._h / 4)) * percent;
-	}
-    }
+    if (std::fabs(_oldPosX - _posX) < 1.1 && std::fabs(_oldPosY - _posY) < 1.1)
+      {
+	pos.x -= (((_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4) -
+		  ((_posX + _posY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4)) * percent;
+	pos.y -= (((width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4) -
+		  ((width - (_posY + 1) + _posX) * 1.0 * Scale::get()._h / 4)) * percent;
+      }
 
   s.surface = NULL;
   s.texture = _texture;
   zbuff.add(s, &src, &pos, 2);
+
+  _pixX = pos.x;
+  _pixY = pos.y + 64;
+  _pixH = pos.h;
+  _pixW = pos.w;
 
   if (_timer++ == _speed)
     {
@@ -137,10 +140,17 @@ int		Charset::render(ZBuffer &zbuff, TextureManager &tmgr, int width)
 
 Direction	Charset::getDirection()		const	{return (_dir);}
 Anim		Charset::getAnim()		const	{return (_anim);}
+int		Charset::getLvl()		const	{return (_lvl);}
 int		Charset::getSpeed()		const	{return (_speed);}
 int		Charset::getFrame()		const	{return (_frame);}
 int		Charset::getPosX()		const	{return (_posX);}
 int		Charset::getPosY()		const	{return (_posY);}
+int		Charset::getRock(int i)		const	{return (_inv[i]);}
+int		Charset::getPixX()		const	{return (_pixX);}
+int		Charset::getPixY()		const	{return (_pixY);}
+int		Charset::getPixH()		const	{return (_pixH);}
+int		Charset::getPixW()		const	{return (_pixW);}
+std::string	Charset::getName()		const	{return (_name);}
 void		Charset::setLvl(int s)			{_lvl = s; _frame = 0;}
 void		Charset::setDirection(Direction s)	{_dir = s; _frame = 0;}
 void		Charset::setAnim(Anim s)		{_anim = s; _frame = 0;}
@@ -156,10 +166,10 @@ void		Charset::setOldPosY(int s)		{_oldPosY = s;}
 
 void		Charset::setPosX(int s)
 {
-  if (s < 0 || s == _posX)
+  if (s < 0 || s == _posY)
     return ;
-  _oldPosX = _posX;
-  _posX = s;
+  _oldPosY = _posY;
+  _posY = s;
   _movement = 0;
   _move = 1;
   double time;
@@ -170,10 +180,10 @@ void		Charset::setPosX(int s)
 
 void		Charset::setPosY(int s)
 {
-  if (s < 0 || s == _posY)
+  if (s < 0 || s == _posX)
     return ;
-  _oldPosY = _posY;
-  _posY = s;
+  _oldPosX = _posX;
+  _posX = s;
   _movement = 0;
   _move = 1;
   double time;

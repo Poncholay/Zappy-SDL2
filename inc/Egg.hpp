@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 25 21:17:36 2016 guillaume wilmot
-// Last update Sun Jun 26 06:19:16 2016 guillaume wilmot
+// Last update Sun Jun 26 20:57:59 2016 guillaume wilmot
 //
 
 #ifndef EGG_HPP_
@@ -13,7 +13,7 @@
 
 class		Egg {
 public:
-  Egg(int x, int y, int id, int w) {_x = x; _y = y; _id= id; _w = w; _timer = 0; _frame = 0;}
+  Egg(int y, int x, int id, int w) {_x = x; _y = y; _id= id; _w = w; _timer = 0; _frame = 0;}
 
   inline double getTransformX(int i)
   {
@@ -40,7 +40,7 @@ public:
     src.y = 0;
     dest.w = (s.surface->w / 10) * Scale::get()._x;
     dest.h = s.surface->h * 1.2 * Scale::get()._y;
-    dest.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 8 +
+    dest.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + dest.w / 2 +
       getTransformX(8) * Scale::get()._w;
     dest.y = (_w - (_y + 1) + _x) * 1.0 * Scale::get()._h / 4 - ((1.0 * dest.h) / 2.5) +
       getTransformX(8) * Scale::get()._h;

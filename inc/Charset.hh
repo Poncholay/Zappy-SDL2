@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 17:32:15 2016 guillaume wilmot
-// Last update Sun Jun 26 09:08:57 2016 guillaume wilmot
+// Last update Sun Jun 26 20:57:28 2016 guillaume wilmot
 //
 
 #ifndef CHARSET_HH_
@@ -17,10 +17,10 @@
 
 enum		Direction
   {
-    LEFT = 1,
-    UP,
-    RIGHT,
-    DOWN,
+    LEFT = 2,
+    UP = 1,
+    RIGHT = 4,
+    DOWN = 3,
   };
 
 enum		Anim
@@ -39,10 +39,17 @@ public:
 
   Direction		getDirection() const;
   Anim			getAnim() const;
+  int			getLvl() const;
   int			getSpeed() const;
   int			getFrame() const;
   int			getPosX() const;
   int			getPosY() const;
+  int			getRock(int) const;
+  int			getPixX() const;
+  int			getPixY() const;
+  int			getPixH() const;
+  int			getPixW() const;
+  std::string		getName() const;
   void			setBroadcast();
   void			setLvl(int);
   void			setDirection(Direction);
@@ -79,6 +86,11 @@ private:
   bool		_broadcast;
   int		_broadcastFrame;
 
+  int		_pixX;
+  int		_pixY;
+  int		_pixH;
+  int		_pixW;
+
   bool		_move;
   int		_movement;
   int		_time;
@@ -88,6 +100,7 @@ private:
   int		_inv[7];
 
   std::string	_team;
+  std::string	_name;
 };
 
 #endif /* !CHARSET_HH_ */

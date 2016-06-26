@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:25:25 2016 guillaume wilmot
-// Last update Sun Jun 26 07:01:03 2016 guillaume wilmot
+// Last update Sun Jun 26 20:52:50 2016 guillaume wilmot
 //
 
 #ifndef TILE_HPP_
@@ -17,7 +17,7 @@
 
 class		Tile {
 public:
-  Tile(int x, int y, int w) {_x = x; _y = y; _mapWidth = w; memset(&_rocks, 0, sizeof(_rocks)); _frame = 0; _timer = 0; _active = 0;}
+  Tile(int y, int x, int w) {_x = x; _y = y; _mapWidth = w; memset(&_rocks, 0, sizeof(_rocks)); _frame = 0; _timer = 0; _active = 0;}
   ~Tile() {}
 
   void		setRocks(int *r) {for (int i = 0; i < 7; i++) _rocks[i] = r[i];}
@@ -49,7 +49,8 @@ public:
 	    {
 	      out.w = (1.0 * tmp.surface->w * Scale::get()._x) / 3.6;
 	      out.h = (1.0 * tmp.surface->h * Scale::get()._y) / 3.6;
-	      out.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 8 +
+	      out.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + out.w / 2
+		+
 		getTransformX(i) * Scale::get()._w;
 	      out.y = (_mapWidth - (_y + 1) + _x) * 1.0 * Scale::get()._h / 4 +
 		getTransformY(i) * Scale::get()._h / 2;
@@ -71,7 +72,8 @@ public:
 	in.y = 0;
 	out.w = (1.0 * torch.surface->w / 3 / 1.6 * Scale::get()._x);
 	out.h = (1.0 * torch.surface->h / 1 * Scale::get()._y);
-	out.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 8 +
+	out.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + out.w / 3
+	  +
 	  getTransformX(7) * Scale::get()._w;
 	out.y = (_mapWidth - (_y + 1) + _x) * 1.0 * Scale::get()._h / 4 +
 	  getTransformY(7) * Scale::get()._h / 2 - out.h / 1.2;

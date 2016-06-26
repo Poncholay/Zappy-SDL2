@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Sun Jun 26 09:02:16 2016 guillaume wilmot
+// Last update Sun Jun 26 19:46:59 2016 guillaume wilmot
 //
 
 #include <algorithm>
@@ -65,7 +65,6 @@ void			Displayer::create(bool &stop, bool &start)
 int			Displayer::start(bool &stop, bool &start)
 {
   FpsManager		fpsMgr;
-  SDL_Event		ev;
   SDL_Rect		dims;
 
   _win.setTmgr(&_tmgr);
@@ -83,46 +82,74 @@ int			Displayer::start(bool &stop, bool &start)
     {
       fpsMgr.apply();
       _mutex.lock();
-      while (SDL_PollEvent(&ev))
-	{
-          if (ev.type == SDL_QUIT || ev.type == SDL_KEYDOWN)
-            if (ev.type == SDL_QUIT || ev.key.keysym.sym == SDLK_ESCAPE)
-	      {
-		_mutex.unlock();
-		SDL_VideoQuit();
-		return (stop = true, 0);
-	      }
-          if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN ||
-              ev.type == SDL_MOUSEBUTTONUP || ev.type == SDL_MOUSEMOTION ||
-              ev.type == SDL_MOUSEWHEEL)
-	    _win.checkEvent(ev);
-        }
+      if (manageEvents(stop) == -1)
+	return (0);
       dims = _win.getDimensions();
       _win.getRenderer().renderClear();
       _win.getRenderer().renderCopy(_win.getBackground(), dims, dims);
-
-      for (auto it = _players.begin(); it != _players.end();)
-	if ((*it).second &&
-	    (*it).second->render(_win.getZBuffer(), _tmgr, _map.getWidth()) == -1)
-	  {
-	    delete (*it).second;
-	    it = _players.erase(it);
-	  }
-	else
-	  it++;
-      for (auto it = _eggs.begin(); it != _eggs.end(); it++)
-	if ((*it).second)
-	  (*it).second->render(_tmgr["flag"], _win.getZBuffer());
+      drawProps();
       _map.render(_zbuff, _tmgr);
       _win.createForeground();
 
       Renderer		&r = _win.getRenderer();
       _mutex.unlock();
       r.renderPresent();
+      _inventory.render(_players, _tmgr.getCmgr());
       fpsMgr.show();
     }
   SDL_VideoQuit();
   return (stop = true, 0);
+}
+
+int			Displayer::manageEvents(bool &stop)
+{
+  SDL_Event		ev;
+
+  while (SDL_PollEvent(&ev))
+    {
+      if (ev.type == SDL_QUIT || ev.type == SDL_KEYDOWN)
+	if (ev.type == SDL_QUIT || ev.key.keysym.sym == SDLK_ESCAPE)
+	  {
+	    _mutex.unlock();
+	    SDL_VideoQuit();
+	    return (stop = true, -1);
+	  }
+      if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN ||
+	  ev.type == SDL_MOUSEBUTTONUP || ev.type == SDL_MOUSEMOTION ||
+	  ev.type == SDL_MOUSEWHEEL)
+	_win.checkEvent(ev);
+      if (ev.type == SDL_MOUSEBUTTONDOWN)
+	{
+	  int	x;
+	  int	y;
+
+	  SDL_GetMouseState(&x, &y);
+	  for (auto it = _players.begin(); it != _players.end(); it++)
+	    if ((*it).second)
+	      if (x > (*it).second->getPixX() &&
+		  x < (*it).second->getPixX() + (*it).second->getPixW() &&
+		  y > (*it).second->getPixY() &&
+		  y < (*it).second->getPixY() + (*it).second->getPixH())
+		_inventory.update((*it).first);
+	}
+    }
+  return (0);
+}
+
+void			Displayer::drawProps()
+{
+  for (auto it = _players.begin(); it != _players.end();)
+    if ((*it).second &&
+	(*it).second->render(_win.getZBuffer(), _tmgr, _map.getWidth()) == -1)
+      {
+	delete (*it).second;
+	it = _players.erase(it);
+      }
+    else
+      it++;
+  for (auto it = _eggs.begin(); it != _eggs.end(); it++)
+    if ((*it).second)
+      (*it).second->render(_tmgr["flag"], _win.getZBuffer());
 }
 
 int			Displayer::execute(const std::string &arg)
@@ -165,6 +192,8 @@ int			Displayer::msz(std::istringstream &arg)
       _win.setMapHeight(0);
       return (-1);
     }
+  if (!_inventory.init() == -1)
+    return (-1);
   _map.setWidth(x);
   _map.setHeight(y);
   _map.init();

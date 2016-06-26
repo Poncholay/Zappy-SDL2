@@ -5,17 +5,14 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Sun Jun 26 06:39:25 2016 guillaume wilmot
+// Last update Sun Jun 26 15:31:49 2016 guillaume wilmot
 */
 
 #include <iostream>
 #include <thread>
-#include <unistd.h>
-#include <sstream>
-#include "SDL.h"
 #include "Displayer.hpp"
 #include "ThreadManager.hpp"
-#include "ZClient.hh"
+#include "Client.hpp"
 
 #define PURPLE	"\033[01;35m"
 #define RED	"\033[01;31m"
@@ -33,76 +30,6 @@ void			help()
   std::cout << "Enjoy !" << std::endl;
 }
 
-void			create(bool &stop, bool &start, const std::string &host, int port)
-{
-  std::string		tmp;
-  fd_set		readf;
-  fd_set		writef;
-  struct timeval	tv;
-  bool			begin = false;
-  ZClient		c(host.c_str(), port);
-
-  c.init();
-  while (!Displayer::get() || !start)
-    {
-      if (stop)
-	return ;
-      usleep(100000);
-    }
-  while (!stop)
-    {
-      tv.tv_sec = 0;
-      tv.tv_usec = 1000000;
-      FD_ZERO(&readf);
-      FD_ZERO(&writef);
-      FD_SET(0, &readf);
-      FD_SET(c.getFd(), &readf);
-      if (!begin)
-	FD_SET(c.getFd(), &writef);
-      if (select(c.getFd() + 1, &readf, &writef, NULL, &tv) == -1)
-	return ;
-      if (FD_ISSET(0, &readf))
-	{
-	  if (std::getline(std::cin, tmp))
-	    {
-	      std::cerr << tmp << " : ";
-	      if (Displayer::get())
-		std::cerr << (Displayer::get()->execute(tmp) == -1 ?
-			      std::string(RED) + "Command not found" + std::string(END) :
-			      std::string(VERT) + "Ok" + std::string(END)) << std::endl;
-	    }
-	  else if (std::cin.eof())
-	    {
-	      if (isatty(0))
-		stop = true;
-	      return ;
-	    }
-	}
-      if (FD_ISSET(c.getFd(), &readf))
-	{
-	  if (c.read() == -1)
-	    {
-	      stop = true;
-	      return ;
-	    }
-	  while ((c.getCmd(tmp)) != -1)
-	    {
-	      std::cerr << tmp << " : ";
-	      if (Displayer::get())
-		std::cerr << (Displayer::get()->execute(tmp) == -1 ?
-			      std::string(RED) + "Command not found" + std::string(END) :
-			      std::string(VERT) + "Ok" + std::string(END)) << std::endl;
-	    }
-	}
-      if (!begin)
-	if (FD_ISSET(c.getFd(), &writef))
-	  {
-	    std::cout << c.write(std::string("GRAPHIC\n")) << std::endl;;
-	    begin = true;
-	  }
-    }
-}
-
 int			main(int argc, char **argv)
 {
   bool			stop = false;
@@ -112,6 +39,6 @@ int			main(int argc, char **argv)
     return (std::cerr << argv[0] << ": host port" << std::endl, -1);
   help();
   ThreadManager::get() << (new std::thread(Displayer::create, std::ref(stop), std::ref(start)));
-  ThreadManager::get() << (new std::thread(create, std::ref(stop), std::ref(start), argv[1], std::atoi(argv[2])));
+  ThreadManager::get() << (new std::thread(Client::create, std::ref(stop), std::ref(start), argv[1], std::atoi(argv[2])));
   ThreadManager::get().end();
 }
