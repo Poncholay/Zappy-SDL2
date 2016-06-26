@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 25 21:17:36 2016 guillaume wilmot
-// Last update Sat Jun 25 23:25:00 2016 guillaume wilmot
+// Last update Sun Jun 26 01:47:14 2016 guillaume wilmot
 //
 
 #ifndef EGG_HPP_
@@ -24,9 +24,9 @@ public:
       return (-1);
     src.w = s.surface->w / 10;
     src.h = s.surface->h;
-    src.x = (_frame % 10) * s.surface->w / 10;
+    src.x = (_frame % 10) * src.w;
     src.y = 0;
-    dest.w = (s.surface->w / 10) * 1.2 * Scale::get()._x;
+    dest.w = (s.surface->w / 10) * Scale::get()._x;
     dest.h = s.surface->h * 1.2 * Scale::get()._y;
     dest.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 1.7;
     dest.y = (_w - (_y + 1) + _x) * 1.0 * Scale::get()._h / 4 - ((1.0 * dest.h) / 2.5);

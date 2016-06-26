@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:25:25 2016 guillaume wilmot
-// Last update Sat Jun 25 21:22:12 2016 guillaume wilmot
+// Last update Sun Jun 26 01:52:37 2016 guillaume wilmot
 //
 
 #ifndef TILE_HPP_
@@ -17,13 +17,13 @@
 
 class		Tile {
 public:
-  Tile(int x, int y, int w) {_x = x; _y = y; _mapWidth = w; memset(&_rocks, 0, sizeof(_rocks));}
+  Tile(int x, int y, int w) {_x = x; _y = y; _mapWidth = w; memset(&_rocks, 0, sizeof(_rocks)); _frame = 0; _timer = 0; _active = 0;}
   ~Tile() {}
 
   void		setRocks(int *r) {for (int i = 0; i < 7; i++) _rocks[i] = r[i];}
   void		setUp(int lvl, int active, bool res) {_lvl = lvl; _active = active; _res = res;}
   void		addRock(int id, bool add) {_rocks[id] += (add ? -1 : 1);}
-  void		render(ZBuffer &buff, TextureManager &tmgr) const
+  void		render(ZBuffer &buff, TextureManager &tmgr)
   {
     for (unsigned int i = 0; i < 7; i++)
       {
@@ -47,6 +47,26 @@ public:
 	    in.h = tmp.surface->h;
 	    buff.add(tmp, &in, &out);
 	  }
+	if (_active)
+	  {
+	    TextureManager::surface	&torch = tmgr["torches"];
+	    if (!torch.texture || !torch.surface)
+	      continue ;
+	    in.w = torch.surface->w / 5;
+	    in.h = torch.surface->h;
+	    in.x = (_frame % 5) * in.w;
+	    in.y = 0;
+	    out.w = (1.0 * torch.surface->w / 5 / 1.6 * Scale::get()._x);
+	    out.h = (1.0 * torch.surface->h / 1.6 * Scale::get()._y);
+	    out.x = (_x + _y) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 8;
+	    out.y = (_mapWidth - (_y + 1) + _x) * 1.0 * Scale::get()._h / 4;
+	    buff.add(torch, &in, &out);
+	    if (_timer++ >= 60)
+	      {
+		_frame++;
+		_timer = 0;
+	      }
+	  }
       }
   }
 
@@ -62,6 +82,8 @@ private:
   int		_lvl;
   int		_active;
   bool		_res;
+  int		_frame;
+  int		_timer;
 };
 
 #endif /* !TILE_HPP_ */
