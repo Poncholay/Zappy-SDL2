@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Tue Jun  7 16:27:45 2016 guillaume wilmot
-// Last update Sun Jun 26 09:17:31 2016 guillaume wilmot
+// Last update Sun Jun 26 10:00:13 2016 guillaume wilmot
 //
 
 #include <iostream>
@@ -75,10 +75,20 @@ int		Charset::render(ZBuffer &zbuff, TextureManager &tmgr, int width)
 
   if (_move)
     {
-      pos.x -= (((_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4) -
-		((_posX + _posY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4)) * percent;
-      pos.y -= (((width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4) -
-		((width - (_posY + 1) + _posX) * 1.0 * Scale::get()._h / 4)) * percent;
+      if (std::fabs(_oldPosX - _posX) > 1.1 || std::fabs(_oldPosY - _posY) > 1.1)
+	{
+	  // pos.x -= (((_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4) -
+	  // 	    ((_posX + _posY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4)) * percent;
+	  // pos.y -= (((width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4) -
+	  // 	    ((width - (_posY + 1) + _posX) * 1.0 * Scale::get()._h / 4)) * percent;
+	}
+      else
+	{
+	  pos.x -= (((_oldPosX + _oldPosY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4) -
+		    ((_posX + _posY) * 1.0 * Scale::get()._w / 2 + Scale::get()._w / 4)) * percent;
+	  pos.y -= (((width - (_oldPosY + 1) + _oldPosX) * 1.0 * Scale::get()._h / 4) -
+		    ((width - (_posY + 1) + _posX) * 1.0 * Scale::get()._h / 4)) * percent;
+	}
     }
 
   s.surface = NULL;

@@ -5,7 +5,7 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Fri Jun 10 14:22:12 2016 guillaume wilmot
-// Last update Sun Jun 26 04:43:40 2016 guillaume wilmot
+// Last update Sun Jun 26 09:57:22 2016 guillaume wilmot
 //
 
 #include "Map.hpp"
@@ -35,7 +35,7 @@ void		Map::setRocks(unsigned int x, unsigned int y, int *rocks)
 {
   if (x >= _w || y >= _h)
     return ;
-  create(x, y);
+ create(x, y);
   _map[y][x].get()->setRocks(rocks);
 }
 
