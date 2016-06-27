@@ -5,7 +5,7 @@
 ** Login   <wilmot_g@epitech.net>
 **
 ** Started on  Tue Jun  7 16:01:13 2016 guillaume wilmot
-// Last update Sun Jun 26 15:31:49 2016 guillaume wilmot
+// Last update Sun Jun 26 22:41:36 2016 guillaume wilmot
 */
 
 #include <iostream>
@@ -13,6 +13,7 @@
 #include "Displayer.hpp"
 #include "ThreadManager.hpp"
 #include "Client.hpp"
+#include "Sounds.hpp"
 
 #define PURPLE	"\033[01;35m"
 #define RED	"\033[01;31m"

@@ -5,12 +5,13 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sat Jun 11 16:15:24 2016 guillaume wilmot
-// Last update Sun Jun 26 20:45:24 2016 guillaume wilmot
+// Last update Sun Jun 26 22:35:57 2016 guillaume wilmot
 //
 
 #include <iostream>
 #include "ShapedWindow.hpp"
 #include "SDL2_rotozoom.h"
+#include "Sounds.hpp"
 
 ShapedWindow::ShapedWindow(const std::string &name, int w, int h)
 {
@@ -60,6 +61,7 @@ int			ShapedWindow::create()
 	return (std::cerr << "Could not create window." << std::endl, -1);
       if (_renderer.init(_window) == -1)
 	return (-1);
+      Sounds::get().playMusic(MUSIC);
       _tmgr->setRenderer(&_renderer);
       _zbuff->setRenderer(&_renderer);
     }

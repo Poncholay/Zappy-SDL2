@@ -5,7 +5,7 @@
 ## Login   <wilmot_g@epitech.net>
 ## 
 ## Started on  Thu Jun 16 12:12:58 2016 guillaume wilmot
-## Last update Sun Jun 26 17:45:23 2016 guillaume wilmot
+## Last update Mon Jun 27 11:24:56 2016 guillaume wilmot
 ##
 
 SRC	= Charset.cpp		\
@@ -19,6 +19,7 @@ SRC	= Charset.cpp		\
 	  NameGenerator.cpp	\
 	  Renderer.cpp		\
 	  ShapedWindow.cpp	\
+	  Sounds.cpp		\
 	  TextureManager.cpp	\
 	  ThreadManager.cpp	\
 	  ZBuffer.cpp		\
@@ -28,7 +29,7 @@ OBJ	= $(addprefix $(OBJDIR), $(SRC:.cpp=.o))
 
 RM	= rm -f
 
-CXX	= g++ -O3 -Wl,-rpath,./lib -std=c++11 -g
+CXX	= g++ -O3 -Wl,-rpath,./lib -std=c++11
 
 NAME	= zappy-gfx
 
@@ -38,7 +39,7 @@ INCDIR	= -I inc/ -I ./inc/SDL
 
 MAKEOBJ	= obj
 
-LDFLAGS 	+= -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lpng16 -ljpeg -L ./lib
+LDFLAGS 	+= -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lpng16 -ljpeg -llash -lfluidsynth -L ./lib
 CXXFLAGS	+= -W -Wall -Wextra -Werror
 
 all:

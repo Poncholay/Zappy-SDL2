@@ -5,18 +5,20 @@
 // Login   <wilmot_g@epitech.net>
 //
 // Started on  Sun Jun 19 18:30:55 2016 guillaume wilmot
-// Last update Sun Jun 26 19:46:59 2016 guillaume wilmot
+// Last update Sun Jun 26 23:29:00 2016 guillaume wilmot
 //
 
 #include <algorithm>
 #include <sstream>
 #include <string>
 #include <unistd.h>
+#include "SDL_image.h"
 #include "Time.hpp"
 #include "ScopedLock.hpp"
 #include "FpsManager.hpp"
 #include "Displayer.hpp"
 #include "Charset.hh"
+#include "Sounds.hpp"
 
 Displayer::Displayer() : _win("Zappy", 0, 0), _zbuff(WINX, WINY)
 {
@@ -52,11 +54,13 @@ void			Displayer::create(bool &stop, bool &start)
   Displayer		d;
 
   Displayer::get(&d);
-  if (SDL_VideoInit(NULL) == -1)
+  if (SDL_Init(SDL_INIT_VIDEO) == -1)
     {
+      stop = true;
       std::cerr << "Could not initialize SDL video." << std::endl;
       return ;
     }
+  try {Sounds::get().init();} catch (const std::exception &) {stop = true; return ;}
   d.start(stop, start);
   Displayer::get(NULL, true);
   SDL_VideoQuit();
@@ -78,7 +82,7 @@ int			Displayer::start(bool &stop, bool &start)
   _mutex.unlock();
   _win.getRenderer().setRenderDrawColor(0, 0, 0, 0);
 
-  while (!stop)
+  while (!stop && !_end)
     {
       fpsMgr.apply();
       _mutex.lock();
@@ -130,7 +134,10 @@ int			Displayer::manageEvents(bool &stop)
 		  x < (*it).second->getPixX() + (*it).second->getPixW() &&
 		  y > (*it).second->getPixY() &&
 		  y < (*it).second->getPixY() + (*it).second->getPixH())
-		_inventory.update((*it).first);
+		{
+		  _inventory.update((*it).first);
+		  Sounds::get().playSound(VOICES);
+		}
 	}
     }
   return (0);
@@ -248,6 +255,7 @@ int			Displayer::pnw(std::istringstream &arg)
   _players[id]->setTeam(team);
   _players[id]->setDirection(mapDir(dir));
   _players[id]->setAnim(STAND);
+  Sounds::get().playSound(SPAWN);
   return (0);
 }
 
@@ -329,6 +337,7 @@ int			Displayer::pdr(std::istringstream &arg)
   if (!_players[id])
     return (std::cerr << "No Player" << id << std::endl, -1);
   _map.addRock(_players[id]->getPosX(), _players[id]->getPosY(), i);
+  Sounds::get().playSound(PICK);
   return (0);
 }
 
@@ -342,6 +351,7 @@ int			Displayer::pgt(std::istringstream &arg)
   if (!_players[id])
     return (std::cerr << "No Player" << id << std::endl, -1);
   _map.removeRock(_players[id]->getPosX(), _players[id]->getPosY(), i);
+  Sounds::get().playSound(PICK);
   return (0);
 }
 
@@ -355,6 +365,7 @@ int			Displayer::pdi(std::istringstream &arg)
   if (!_players[id])
     return (std::cerr << "No Player" << id << std::endl, -1);
   _players[id]->kill();
+  Sounds::get().playSound(DEATH);
   return (0);
 }
 
@@ -437,6 +448,24 @@ int			Displayer::seg(std::istringstream &arg)
   _teams.clear();
   _teams.push_back(team);
   _end = true;
+  Sounds::get().playSound(VICTORY);
+
+  SDL_Surface	*s;
+  SDL_Texture	*t;
+  if (!(s = IMG_Load("./assets/textures/victory.png")))
+    return (0);
+  if (!(t = SDL_CreateTextureFromSurface(_win.getRenderer().get(), s)))
+    return (0);
+  SDL_Rect	pos;
+  pos.x = 0;
+  pos.y = 0;
+  pos.w = s->w;
+  pos.h = s->h;
+  _win.getRenderer().renderCopy(t, pos, pos);
+  _win.getRenderer().renderPresent();
+  sleep(3);
+  SDL_FreeSurface(s);
+  SDL_DestroyTexture(t);
   return (0);
 }
 
