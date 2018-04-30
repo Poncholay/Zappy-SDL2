@@ -39,7 +39,7 @@ INCDIR	= -I inc/ -I ./inc/SDL
 
 MAKEOBJ	= obj
 
-LDFLAGS 	+= -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lpng16 -ljpeg -llash -lfluidsynth -L ./lib
+LDFLAGS 	+= -lpthread -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lpng16 -ljpeg -llash -lfluidsynth -L ./lib
 CXXFLAGS	+= -W -Wall -Wextra -Werror
 
 all:

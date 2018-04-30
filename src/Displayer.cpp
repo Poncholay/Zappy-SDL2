@@ -199,7 +199,7 @@ int			Displayer::msz(std::istringstream &arg)
       _win.setMapHeight(0);
       return (-1);
     }
-  if (!_inventory.init() == -1)
+  if (_inventory.init() == -1)
     return (-1);
   _map.setWidth(x);
   _map.setHeight(y);
